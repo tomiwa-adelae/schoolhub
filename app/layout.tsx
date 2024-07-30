@@ -3,6 +3,7 @@ import { Montserrat } from "next/font/google";
 import "./globals.css";
 import { ClerkProvider } from "@clerk/nextjs";
 import { ThemeProvider } from "@/context/ThemeProvider";
+import { Toaster } from "@/components/ui/toaster";
 
 const montserrat = Montserrat({
 	subsets: ["latin"],
@@ -27,7 +28,10 @@ export default function RootLayout({
 				>
 					<main className="min-h-screen w-full dark:bg-dark text-dark dark:text-white bg-white  dark:bg-grid-white/[0.2] bg-grid-black/[0.2] relative">
 						<div className="absolute pointer-events-none inset-0 flex items-center justify-center dark:bg-dark bg-white [mask-image:radial-gradient(ellipse_at_center,transparent_85%,black)]" />
-						<ThemeProvider>{children}</ThemeProvider>
+						<ThemeProvider>
+							{children}
+							<Toaster />
+						</ThemeProvider>
 					</main>
 				</body>
 			</html>

@@ -60,3 +60,46 @@ export const getUserById = async (clerkId: string) => {
 		handleError(error);
 	}
 };
+
+export const updateIdentity = async (clerkId: string, identity: string) => {
+	try {
+		await connectToDatabase();
+
+		const updatedIdentity = await User.findOne({ clerkId });
+
+		if (!updatedIdentity) throw new Error("User not found!");
+
+		updatedIdentity.identity = identity;
+
+		await updatedIdentity.save();
+
+		return JSON.parse(JSON.stringify({ status: "OK" }));
+	} catch (error) {
+		handleError(error);
+	}
+};
+
+export const updateBoardingDetails = async (clerkId: string, user: any) => {
+	try {
+		await connectToDatabase();
+		const boardingUser = await User.findOne({ clerkId });
+
+		if (!boardingUser) throw new Error("User not found!");
+
+		boardingUser.firstName = user.firstName;
+		boardingUser.lastName = user.lastName;
+		boardingUser.email = user.email;
+		boardingUser.matricNumber = user.matricNumber;
+		boardingUser.phoneNumber = user.phoneNumber;
+		boardingUser.level = user.level;
+		boardingUser.department = user.department;
+		boardingUser.faculty = user.faculty;
+		boardingUser.successfulBoarding = true;
+
+		await boardingUser.save();
+
+		return JSON.parse(JSON.stringify({ status: "OK" }));
+	} catch (error) {
+		handleError(error);
+	}
+};

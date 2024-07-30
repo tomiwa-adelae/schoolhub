@@ -1,7 +1,7 @@
-declare interface SearchParamsProps {
-	params: { id: string };
-	searchParams: { [key: string]: string | string[] | undefined | string };
-}
+declare type SearchParamProps = {
+	params: { [key: string]: string };
+	searchParams: { [key: string]: string | string[] | undefined };
+};
 
 declare interface CreateUserParams {
 	clerkId: string;

@@ -1,3 +1,5 @@
+import LeftSideBar from "@/components/shared/LeftSideBar";
+import TopNavbar from "@/components/shared/TopNavBar";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -10,8 +12,12 @@ export default function MainLayout({
 	children: React.ReactNode;
 }>) {
 	return (
-		<div className="flex items-center justify-center min-h-screen">
-			{children}
-		</div>
+		<main className="flex items-center justify-center">
+			<LeftSideBar />
+			<div className="flex-1 md:ml-60">
+				<TopNavbar />
+				<div className="mt-14 md:mt-0 container py-10">{children}</div>
+			</div>
+		</main>
 	);
 }
