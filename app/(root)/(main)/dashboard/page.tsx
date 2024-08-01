@@ -24,8 +24,12 @@ const page = async () => {
 				identity={user.identity}
 				department={user.department}
 				picture={user.picture}
-			/>
-			<div className="grid grid-cols-1 lg:grid-cols-5 gap-4 my-6 ">
+			>
+				<Button asChild className="w-full md:w-auto">
+					<Link href="/">Apply for exeat</Link>
+				</Button>
+			</PageHeader>
+			<div className="grid grid-cols-1 lg:grid-cols-5 gap-4 my-6">
 				<div className="col-span-3">
 					<div className="border-2 border-dashed rounded-md p-4 border-gray-400">
 						<h3 className="font-bold text-lg mb-4">My courses</h3>

@@ -7,6 +7,7 @@ interface PageHeaderProps {
 	department: string;
 	identity: string;
 	picture: string;
+	children: React.ReactNode;
 }
 
 const PageHeader = ({
@@ -15,6 +16,7 @@ const PageHeader = ({
 	department,
 	identity,
 	picture,
+	children,
 }: PageHeaderProps) => {
 	return (
 		<div className="flex items-center justify-between flex-col md:flex-row w-full gap-4">
@@ -38,7 +40,7 @@ const PageHeader = ({
 				</div>
 			</div>
 
-			<Button className="w-full md:w-auto">Apply for exeat</Button>
+			{children}
 		</div>
 	);
 };
