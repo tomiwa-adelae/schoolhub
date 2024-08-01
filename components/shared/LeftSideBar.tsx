@@ -56,17 +56,7 @@ const LeftSideBar = () => {
 					);
 				})}
 			</nav>
-			{/* <SignedIn>
-				<div className="flex items-center justify-center gap-2">
-					<UserButton />
-					<div className="flex items-start flex-col justify-center space-y-0">
-						<h3 className="text-sm font-bold">Tomiwa Adelae</h3>
-						<small className="text-xs">
-							tomiwaadelae@gmail.com
-						</small>
-					</div>
-				</div>
-			</SignedIn> */}
+
 			<SignedIn>
 				<div className="flex items-center justify-start gap-2">
 					<UserButton />

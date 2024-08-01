@@ -1,5 +1,5 @@
 import LeftSideBar from "@/components/shared/LeftSideBar";
-import TopNavbar from "@/components/shared/TopNavBar";
+import TopNavbar from "@/components/shared/TopNavbar";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -16,7 +16,7 @@ export default function MainLayout({
 			<LeftSideBar />
 			<div className="flex-1 md:ml-60">
 				<TopNavbar />
-				<div className="mt-14 md:mt-0 container py-10">{children}</div>
+				<div className="mt-14 md:mt-0 container py-4">{children}</div>
 			</div>
 		</main>
 	);

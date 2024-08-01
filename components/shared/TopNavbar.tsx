@@ -6,7 +6,10 @@ import { MobileNavbar } from "./MobileNavbar";
 
 const TopNavbar = () => {
 	return (
-		<div className="container fixed md:relative top-0 right-0 w-full border-b-2 border-dashed border-gray-400 h-14 flex items-center justify-between z-1000 dark:bg-dark bg-white  dark:bg-grid-white/[0.2] bg-grid-black/[0.2]">
+		<div
+			className="container fixed md:relative top-0 right-0 w-full border-b-2 border-dashed border-gray-400 h-14 flex items-center justify-between dark:bg-dark bg-white dark:bg-grid-white/[0.2] bg-grid-black/[0.2]"
+			style={{ zIndex: "100" }}
+		>
 			<Link href="/" className="flex items-center justify-start gap-2">
 				<Image
 					src={"/assets/logo.png"}
