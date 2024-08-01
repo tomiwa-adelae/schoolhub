@@ -28,3 +28,14 @@ declare interface OnboardingUserParams {
 	faculty?: string;
 	identity?: string | any;
 }
+
+declare interface UrlQueryParams {
+	params: string;
+	key: string;
+	value: string | null;
+}
+
+declare interface RemoveUrlQueryParams {
+	params: string;
+	keysToRemove: string[];
+}

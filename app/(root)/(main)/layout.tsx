@@ -15,8 +15,7 @@ export default function MainLayout({
 		<main className="flex items-center justify-center">
 			<LeftSideBar />
 			<div className="flex-1 md:ml-60">
-				<TopNavbar />
-				<div className="mt-14 md:mt-0 container py-4">{children}</div>
+				<div className="mt-14 md:mt-0">{children}</div>
 			</div>
 		</main>
 	);

@@ -87,21 +87,19 @@ export function MobileNavbar() {
 						);
 					})}
 				</nav>
-				<SheetFooter className="w-full">
-					<SignedIn>
-						<div className="flex items-center justify-start gap-2">
-							<UserButton />
-							<div className="flex items-start flex-col justify-center space-y-0">
-								<h3 className="text-sm font-bold">
-									{user?.firstName} {user?.lastName}
-								</h3>
-								<small className="text-xs">
-									{user?.emailAddresses[0].emailAddress}
-								</small>
-							</div>
+				<SignedIn>
+					<div className="w-full flex items-center justify-start gap-2">
+						<UserButton />
+						<div className="flex items-start flex-col justify-center space-y-1">
+							<h3 className="text-sm font-bold">
+								{user?.firstName} {user?.lastName}
+							</h3>
+							<small className="text-xs">
+								{user?.emailAddresses[0].emailAddress}
+							</small>
 						</div>
-					</SignedIn>
-				</SheetFooter>
+					</div>
+				</SignedIn>
 			</SheetContent>
 		</Sheet>
 	);

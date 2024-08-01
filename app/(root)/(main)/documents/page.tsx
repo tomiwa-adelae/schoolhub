@@ -5,15 +5,15 @@ import { auth } from "@clerk/nextjs";
 import {
 	Table,
 	TableBody,
-	TableCaption,
 	TableCell,
-	TableFooter,
 	TableHead,
 	TableHeader,
 	TableRow,
 } from "@/components/ui/table";
 import Pagination from "@/components/Pagination";
 import Image from "next/image";
+import TopNavbar from "@/components/shared/TopNavbar";
+import SearchBar from "@/components/SearchBar";
 
 const documents = [
 	{
@@ -54,53 +54,62 @@ const page = async () => {
 	const user = await getUserById(userId!);
 
 	return (
-		<div>
-			<PageHeader
-				firstName={user.firstName}
-				lastName={user.lastName}
-				identity={user.identity}
-				department={user.department}
-				picture={user.picture}
-			/>
-			<div className="my-6">
-				<Table>
-					<TableHeader>
-						<TableRow>
-							<TableHead>Name</TableHead>
-							<TableHead>Course</TableHead>
-							<TableHead>Course code</TableHead>
-							<TableHead className="text-right">
-								Lecturer
-							</TableHead>
-						</TableRow>
-					</TableHeader>
-					<TableBody>
-						{documents.map((document, index) => (
-							<TableRow key={index}>
-								<TableCell className="font-medium">
-									<div className="flex items-center justify-start">
-										<Image
-											src={"/assets/icons/word.svg"}
-											alt="Word file"
-											width={1000}
-											height={1000}
-											className="w-6 h-6 object-cover mr-2"
-										/>
-										{document.name}
-									</div>
-								</TableCell>
-								<TableCell>{document.courseName}</TableCell>
-								<TableCell>{document.courseCode}</TableCell>
-								<TableCell className="text-right">
-									{document.lecturer}
-								</TableCell>
+		<main>
+			<TopNavbar>
+				<SearchBar type={"documents"} />
+			</TopNavbar>
+			<div className="container py-4">
+				<PageHeader
+					firstName={user.firstName}
+					lastName={user.lastName}
+					identity={user.identity}
+					department={user.department}
+					picture={user.picture}
+				/>
+				<div className="my-6">
+					<Table>
+						<TableHeader>
+							<TableRow>
+								<TableHead>Name</TableHead>
+								<TableHead>Course</TableHead>
+								<TableHead>Course code</TableHead>
+								<TableHead className="text-right">
+									Lecturer
+								</TableHead>
 							</TableRow>
-						))}
-					</TableBody>
-				</Table>
+						</TableHeader>
+						<TableBody>
+							{documents.map((document, index) => (
+								<TableRow key={index}>
+									<TableCell className="font-medium">
+										<div className="flex items-center justify-start flex-col text-center md:flex-row">
+											<Image
+												src={"/assets/icons/word.svg"}
+												alt="Word file"
+												width={1000}
+												height={1000}
+												className="w-6 h-6 object-cover mr-2"
+											/>
+											{document.name}
+										</div>
+									</TableCell>
+									<TableCell className="text-center">
+										{document.courseName}
+									</TableCell>
+									<TableCell className="text-center">
+										{document.courseCode}
+									</TableCell>
+									<TableCell className="text-right">
+										{document.lecturer}
+									</TableCell>
+								</TableRow>
+							))}
+						</TableBody>
+					</Table>
+				</div>
+				<Pagination />
 			</div>
-			<Pagination />
-		</div>
+		</main>
 	);
 };
 
