@@ -39,6 +39,7 @@ export function MobileNavbar() {
 			<SheetContent
 				side={"left"}
 				className="flex items-center justify-center flex-col"
+				style={{ zIndex: "20000" }}
 			>
 				<SheetHeader className="w-full">
 					<SheetClose asChild>

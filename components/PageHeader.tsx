@@ -26,7 +26,7 @@ const PageHeader = ({
 					height={1000}
 					className="rounded-full w-12 h-12 object-cover"
 				/>
-				<div className="flex items-start justify-center flex-col space-y-0">
+				<div className="flex items-start justify-center flex-col space-y-1">
 					<h3 className="font-bold text-base">
 						Hello, {firstName} {lastName}
 					</h3>
@@ -38,7 +38,7 @@ const PageHeader = ({
 				</div>
 			</div>
 
-			<Button className="w-full md:w-auto">Apply for Button</Button>
+			<Button className="w-full md:w-auto">Apply for exeat</Button>
 		</div>
 	);
 };
