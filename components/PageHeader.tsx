@@ -7,7 +7,7 @@ interface PageHeaderProps {
 	department: string;
 	identity: string;
 	picture: string;
-	children: React.ReactNode;
+	children?: React.ReactNode;
 }
 
 const PageHeader = ({
