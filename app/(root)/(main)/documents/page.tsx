@@ -67,6 +67,7 @@ const page = async () => {
 					picture={user.picture}
 				/>
 				<div className="my-6">
+					<h3 className="font-bold text-lg mb-4">My documents</h3>
 					<Table>
 						<TableHeader>
 							<TableRow>
