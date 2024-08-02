@@ -14,7 +14,7 @@ export default function Home() {
 		<main className="min-h-screen flex items-center justify-between flex-col">
 			<Header>
 				<SignedIn>
-					<UserButton />
+					<UserButton afterSignOutUrl="/" />
 				</SignedIn>
 				<SignedOut>
 					<Button asChild>

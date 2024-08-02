@@ -89,7 +89,7 @@ export function MobileNavbar() {
 				</nav>
 				<SignedIn>
 					<div className="w-full flex items-center justify-start gap-2">
-						<UserButton />
+						<UserButton afterSignOutUrl="/" />
 						<div className="flex items-start flex-col justify-center space-y-1">
 							<h3 className="text-sm font-bold">
 								{user?.firstName} {user?.lastName}

@@ -23,6 +23,7 @@ declare interface OnboardingUserParams {
 	picture?: string;
 	matricNumber?: string;
 	phoneNumber?: string;
+	parentPhoneNumber?: string;
 	level?: string;
 	department?: string;
 	faculty?: string;

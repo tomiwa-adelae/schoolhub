@@ -91,6 +91,7 @@ export const updateBoardingDetails = async (clerkId: string, user: any) => {
 		boardingUser.email = user.email;
 		boardingUser.matricNumber = user.matricNumber;
 		boardingUser.phoneNumber = user.phoneNumber;
+		boardingUser.parentPhoneNumber = user.parentPhoneNumber;
 		boardingUser.level = user.level;
 		boardingUser.department = user.department;
 		boardingUser.faculty = user.faculty;

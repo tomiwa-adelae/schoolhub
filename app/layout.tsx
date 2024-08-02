@@ -21,7 +21,7 @@ export default function RootLayout({
 	children: React.ReactNode;
 }>) {
 	return (
-		<ClerkProvider>
+		<ClerkProvider afterSignInUrl="/identity">
 			<html lang="en">
 				<body
 					className={`${montserrat.className} min-h-screen bg-background antialiased`}

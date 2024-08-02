@@ -46,6 +46,9 @@ const page = async () => {
 						<Course />
 						<Course />
 					</div>
+					{/* <p className="text-sm italic text-center mt-4">
+						You have not registered for any course yet. Start today
+					</p> */}
 				</div>
 				<Pagination />
 			</div>

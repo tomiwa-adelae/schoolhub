@@ -17,7 +17,7 @@ const Course = () => {
 				</Link>
 				<div className="flex items-start justify-center flex-col space-y-1">
 					<Link
-						href="/"
+						href="/courses/12345"
 						className="text-sm font-bold hover:underline hover:text-blue-400 transition"
 					>
 						Introduction to electronics

@@ -30,56 +30,34 @@ import { IUser } from "@/lib/database/models/user.model";
 import { departments, faculties, levels } from "@/constants";
 import { updateBoardingDetails } from "@/lib/actions/user.actions";
 import { useRouter } from "next/navigation";
-
-const FormSchema = z.object({
-	firstName: z.string().min(2, {
-		message: "First name must be at least 2 characters.",
-	}),
-	lastName: z.string().min(2, {
-		message: "Last name must be at least 2 characters.",
-	}),
-	email: z.string().email(),
-	phoneNumber: z
-		.string()
-		.min(10, {
-			message: "Phone number must be at least 10 characters.",
-		})
-		.max(11, { message: "Phone number must be valid." }),
-	matricNumber: z
-		.string()
-		.min(7, {
-			message: "Matriculation/Admission must be valid.",
-		})
-		.max(13, { message: "Matriculation/Admission must be valid." }),
-	level: z.string(),
-	department: z.string(),
-	faculty: z.string(),
-});
+import { StudentFormSchema } from "@/lib/validaition";
 
 export function StudentForm({ id, user }: { id: string; user: IUser }) {
 	const router = useRouter();
 
-	const form = useForm<z.infer<typeof FormSchema>>({
-		resolver: zodResolver(FormSchema),
+	const form = useForm<z.infer<typeof StudentFormSchema>>({
+		resolver: zodResolver(StudentFormSchema),
 		defaultValues: {
 			firstName: user.firstName || "",
 			lastName: user.lastName || "",
 			email: user.email || "",
 			matricNumber: "",
 			phoneNumber: "",
+			parentPhoneNumber: "",
 			level: "",
 			department: "",
 			faculty: "",
 		},
 	});
 
-	async function onSubmit(data: z.infer<typeof FormSchema>) {
+	async function onSubmit(data: z.infer<typeof StudentFormSchema>) {
 		try {
 			const user = {
 				firstName: data.firstName,
 				lastName: data.lastName,
 				email: data.email,
 				phoneNumber: data.phoneNumber,
+				parentPhoneNumber: data.parentPhoneNumber,
 				matricNumber: data.matricNumber,
 				level: data.level,
 				department: data.department,
@@ -160,19 +138,42 @@ export function StudentForm({ id, user }: { id: string; user: IUser }) {
 						</FormItem>
 					)}
 				/>
-				<FormField
-					control={form.control}
-					name="phoneNumber"
-					render={({ field }) => (
-						<FormItem>
-							<FormLabel>Phone number</FormLabel>
-							<FormControl>
-								<Input placeholder="0812 345 6789" {...field} />
-							</FormControl>
-							<FormMessage />
-						</FormItem>
-					)}
-				/>
+				<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+					<FormField
+						control={form.control}
+						name="phoneNumber"
+						render={({ field }) => (
+							<FormItem>
+								<FormLabel>Phone number</FormLabel>
+								<FormControl>
+									<Input
+										placeholder="0812 345 6789"
+										{...field}
+									/>
+								</FormControl>
+								<FormMessage />
+							</FormItem>
+						)}
+					/>
+					<FormField
+						control={form.control}
+						name="parentPhoneNumber"
+						render={({ field }) => (
+							<FormItem>
+								<FormLabel>
+									Parent/Guardian&apos;s phone number
+								</FormLabel>
+								<FormControl>
+									<Input
+										placeholder="0812 345 6789"
+										{...field}
+									/>
+								</FormControl>
+								<FormMessage />
+							</FormItem>
+						)}
+					/>
+				</div>
 				<div className="grid grid-cols-1 md:grid-cols-3 gap-4">
 					<FormField
 						control={form.control}
@@ -267,8 +268,12 @@ export function StudentForm({ id, user }: { id: string; user: IUser }) {
 						)}
 					/>
 				</div>
-				<Button disabled={form.formState.isSubmitting} type="submit">
-					{form.formState.isSubmitting ? "Submitting" : "Submit"}
+				<Button
+					className="w-full md:w-auto"
+					disabled={form.formState.isSubmitting}
+					type="submit"
+				>
+					{form.formState.isSubmitting ? "Submitting..." : "Submit"}
 				</Button>
 			</form>
 		</Form>

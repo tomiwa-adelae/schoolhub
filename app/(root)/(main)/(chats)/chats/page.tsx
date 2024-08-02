@@ -35,6 +35,9 @@ const page = async () => {
 					My messages
 				</h3>
 				<MessagesList />
+				{/* <p className="text-sm italic text-center mt-4">
+					You have no chat. Start today
+				</p> */}
 			</div>
 		</main>
 	);

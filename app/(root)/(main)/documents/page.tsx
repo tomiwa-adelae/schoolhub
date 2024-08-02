@@ -83,7 +83,7 @@ const page = async () => {
 							{documents.map((document, index) => (
 								<TableRow key={index}>
 									<TableCell className="font-medium">
-										<div className="flex items-center justify-start flex-col text-center md:flex-row">
+										<div className="flex items-start md:items-center justify-start flex-col md:flex-row">
 											<Image
 												src={"/assets/icons/word.svg"}
 												alt="Word file"
@@ -94,12 +94,8 @@ const page = async () => {
 											{document.name}
 										</div>
 									</TableCell>
-									<TableCell className="text-center">
-										{document.courseName}
-									</TableCell>
-									<TableCell className="text-center">
-										{document.courseCode}
-									</TableCell>
+									<TableCell>{document.courseName}</TableCell>
+									<TableCell>{document.courseCode}</TableCell>
 									<TableCell className="text-right">
 										{document.lecturer}
 									</TableCell>
@@ -107,6 +103,9 @@ const page = async () => {
 							))}
 						</TableBody>
 					</Table>
+					<p className="text-sm italic text-center mt-4">
+						You have no document yet.
+					</p>
 				</div>
 				<Pagination />
 			</div>

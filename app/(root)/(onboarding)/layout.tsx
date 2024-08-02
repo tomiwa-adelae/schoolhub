@@ -18,7 +18,7 @@ export default function OnboardingLayout({
 		<div className="min-h-screen w-full">
 			<Header>
 				<SignedIn>
-					<UserButton />
+					<UserButton afterSignOutUrl="/" />
 				</SignedIn>
 				<SignedOut>
 					<Button asChild>

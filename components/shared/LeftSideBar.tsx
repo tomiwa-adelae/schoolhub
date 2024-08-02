@@ -59,7 +59,7 @@ const LeftSideBar = () => {
 
 			<SignedIn>
 				<div className="flex items-center justify-start gap-2">
-					<UserButton />
+					<UserButton afterSignOutUrl="/" />
 					<div className="flex items-start flex-col justify-center space-y-0">
 						<h3 className="text-sm font-bold">
 							{user?.firstName} {user?.lastName}

@@ -8,6 +8,7 @@ export interface IUser {
 	lastName: string;
 	matricNumber?: string;
 	phoneNumber?: string;
+	parentPhoneNumber?: string;
 	picture?: string;
 	identity?: string;
 	department?: string;
@@ -39,6 +40,9 @@ const UserSchema = new Schema({
 		type: String,
 	},
 	phoneNumber: {
+		type: String,
+	},
+	parentPhoneNumber: {
 		type: String,
 	},
 	picture: {
