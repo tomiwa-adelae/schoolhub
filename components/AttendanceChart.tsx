@@ -115,7 +115,7 @@ export function AttendanceChart() {
 			</CardContent>
 			<CardFooter className="flex-col gap-2 text-sm">
 				<div className="flex items-center gap-2 font-medium leading-none">
-					<h3 className="text-base font-bold">Congratulations!</h3>
+					<h3 className="text-xs font-bold">Congratulations!</h3>
 					<Library className="w-4 h-4" />
 				</div>
 				<div className="leading-none text-center text-muted-foreground">

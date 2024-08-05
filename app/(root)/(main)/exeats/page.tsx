@@ -88,7 +88,9 @@ const page = async () => {
 							{exeats.map((exeat, index) => (
 								<TableRow key={index}>
 									<TableCell className="font-medium">
-										{exeat.date}
+										<Link href="/exeats/12345">
+											{exeat.date}
+										</Link>
 									</TableCell>
 									<TableCell>{exeat.location}</TableCell>
 									<TableCell>{exeat.reason}</TableCell>

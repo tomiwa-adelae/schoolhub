@@ -1,4 +1,4 @@
-import Course from "@/components/Course";
+import NewCourse from "@/components/NewCourse";
 import PageHeader from "@/components/PageHeader";
 import Pagination from "@/components/Pagination";
 import SearchBar from "@/components/SearchBar";
@@ -25,29 +25,23 @@ const page = async () => {
 					identity={user.identity}
 					department={user.department}
 					picture={user.picture}
-				>
-					<Button asChild className="w-full md:w-auto">
-						<Link href="/courses/new">New course</Link>
-					</Button>
-				</PageHeader>
+				/>
 				<div className="my-6">
-					<h3 className="font-bold text-lg mb-4">My courses</h3>
+					<h3 className="font-bold text-lg mb-4">Add new course</h3>
 					<div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-						<Course />
-						<Course />
-						<Course />
-						<Course />
-						<Course />
-						<Course />
-						<Course />
-						<Course />
-						<Course />
-						<Course />
-						<Course />
-						<Course />
+						<NewCourse />
+						<NewCourse />
+						<NewCourse />
+						<NewCourse />
+						<NewCourse />
+						<NewCourse />
+						<NewCourse />
+						<NewCourse />
+						<NewCourse />
+						<NewCourse />
 					</div>
 					{/* <p className="text-sm italic text-center mt-4">
-						You have not registered for any course yet. Start today
+						Unfortunately! There are no courses left for you to add
 					</p> */}
 				</div>
 				<Pagination />

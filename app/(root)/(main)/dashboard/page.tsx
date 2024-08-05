@@ -41,7 +41,7 @@ const page = async () => {
 						className="w-14 h-14 object-cover"
 					/>
 					<Button asChild>
-						<Link href="/">Add a course now</Link>
+						<Link href="/courses/new">Add a course now</Link>
 					</Button>
 				</div> */}
 				<div>
@@ -99,12 +99,15 @@ const page = async () => {
 										Total courses
 									</p>
 								</div>
-								<div className="bg-blue-400 text-white rounded-md flex flex-col items-center justify-center gap-4 text-center p-4 ">
+								<Link
+									href="/courses/new"
+									className="bg-blue-400 text-white rounded-md flex flex-col items-center justify-center gap-4 text-center p-4 "
+								>
 									<Plus />
 									<h3 className="font-bold text-sm">
 										Add course
 									</h3>
-								</div>
+								</Link>
 							</div>
 						</div>
 					</div>

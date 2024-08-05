@@ -1,18 +1,21 @@
-import React from "react";
+"use client";
 import { Button } from "./ui/button";
-import Link from "next/link";
+
 import { ArrowLeft } from "lucide-react";
 import Image from "next/image";
 import { Theme } from "./shared/Theme";
+import { useRouter } from "next/navigation";
 
 const ChatHead = () => {
+	const router = useRouter();
+
 	return (
 		<div className="flex items-center justify-between bg-white dark:bg-dark border-b-2 border-dashed border-gray-400 p-2 w-full">
 			<div className="flex items-center justify-start gap-2">
 				<Button asChild size={"icon"} variant={"ghost"}>
-					<Link href="/chats">
+					<div onClick={() => router.back()}>
 						<ArrowLeft />
-					</Link>
+					</div>
 				</Button>
 				<Image
 					src={"/assets/user.jpg"}

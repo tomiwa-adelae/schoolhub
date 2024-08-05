@@ -1,4 +1,4 @@
-import Chat from "@/components/Chat";
+import NewChat from "@/components/NewChat";
 import PageHeader from "@/components/PageHeader";
 import SearchBar from "@/components/SearchBar";
 import TopNavbar from "@/components/shared/TopNavbar";
@@ -15,7 +15,7 @@ const page = async () => {
 	return (
 		<main>
 			<TopNavbar>
-				<SearchBar type={"chats"} />
+				<SearchBar type={"names, matric number, phone number"} />
 			</TopNavbar>
 			<div className="py-4">
 				<div className="container">
@@ -25,64 +25,26 @@ const page = async () => {
 						identity={user.identity}
 						department={user.department}
 						picture={user.picture}
-					>
-						<Button className="w-full md:w-auto" asChild>
-							<Link href="/chats/new">New chat</Link>
-						</Button>
-					</PageHeader>
+					/>
 				</div>
 				<h3 className="font-bold text-lg mt-6 mb-2 container">
-					My chats
+					New chat
 				</h3>
 				<div className="grid grid-cols-1 px-2">
-					<Chat />
-					<Chat />
-					<Chat />
-					<Chat />
-					<Chat />
-					<Chat />
-					<Chat />
-					<Chat />
-					<Chat />
-					<Chat />
-					<Chat />
-					<Chat />
-					<Chat />
-					<Chat />
-					<Chat />
-					<Chat />
-					<Chat />
-					<Chat />
-					<Chat />
-					<Chat />
-					<Chat />
-					<Chat />
-					<Chat />
-					<Chat />
-					<Chat />
-					<Chat />
-					<Chat />
-					<Chat />
-					<Chat />
-					<Chat />
-					<Chat />
-					<Chat />
-					<Chat />
-					<Chat />
-					<Chat />
-					<Chat />
-					<Chat />
-					<Chat />
-					<Chat />
-					<Chat />
-					<Chat />
-					<Chat />
-					<Chat />
-					<Chat />
-					<Chat />
+					<NewChat />
+					<NewChat />
+					<NewChat />
+					<NewChat />
+					<NewChat />
+					<NewChat />
+					<NewChat />
+					<NewChat />
+					<NewChat />
+					<NewChat />
+					<NewChat />
 				</div>
 				{/* <p className="text-sm italic text-center mt-4">
-					You have no chat. Start today
+					There is no one to chat with.
 				</p> */}
 			</div>
 		</main>

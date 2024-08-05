@@ -103,9 +103,9 @@ const page = async () => {
 							))}
 						</TableBody>
 					</Table>
-					<p className="text-sm italic text-center mt-4">
+					{/* <p className="text-sm italic text-center mt-4">
 						You have no document yet.
-					</p>
+					</p> */}
 				</div>
 				<Pagination />
 			</div>
