@@ -10,18 +10,18 @@ import {
 } from "lucide-react";
 
 export const themes = [
-	{
-		value: "light",
-		icon: Sun,
-	},
-	{
-		value: "dark",
-		icon: MoonStar,
-	},
-	{
-		value: "system",
-		icon: MonitorCog,
-	},
+{
+	value: "light",
+	icon: Sun,
+},
+{
+	value: "dark",
+	icon: MoonStar,
+},
+{
+	value: "system",
+	icon: MonitorCog,
+},
 ];
 
 export const identities = [

@@ -12,7 +12,12 @@ const ChatHead = () => {
 	return (
 		<div className="flex items-center justify-between bg-white dark:bg-dark border-b-2 border-dashed border-gray-400 p-2 w-full">
 			<div className="flex items-center justify-start gap-2">
-				<Button asChild size={"icon"} variant={"ghost"}>
+				<Button
+					asChild
+					size={"icon"}
+					className="cursor-pointer"
+					variant={"ghost"}
+				>
 					<div onClick={() => router.back()}>
 						<ArrowLeft />
 					</div>

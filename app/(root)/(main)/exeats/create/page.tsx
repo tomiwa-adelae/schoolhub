@@ -23,9 +23,9 @@ const page = async () => {
 				>
 					Apply for Exeat Pass
 				</h1>
-				<ExeatForm
+				{/* <ExeatForm
 					user={user}
-				/>
+				/> */}
 			</div>
 		</main>
 	);
