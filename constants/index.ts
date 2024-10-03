@@ -10,18 +10,18 @@ import {
 } from "lucide-react";
 
 export const themes = [
-{
-	value: "light",
-	icon: Sun,
-},
-{
-	value: "dark",
-	icon: MoonStar,
-},
-{
-	value: "system",
-	icon: MonitorCog,
-},
+	{
+		value: "light",
+		icon: Sun,
+	},
+	{
+		value: "dark",
+		icon: MoonStar,
+	},
+	{
+		value: "system",
+		icon: MonitorCog,
+	},
 ];
 
 export const identities = [
@@ -45,6 +45,7 @@ export const departments = [
 	"nursing",
 	"microbiology",
 ];
+
 export const faculties = [
 	"environmental science",
 	"humanities",
@@ -52,6 +53,10 @@ export const faculties = [
 	"management science",
 	"natural science",
 ];
+
+export const titles = ["Prof.", "Dr.", "Mr.", "Mrs.", "Miss", "Master"];
+
+export const courseUnits = ["0", "1", "2", "3", "4", "6", "8", "10", "12"];
 
 export const navLinks = [
 	{

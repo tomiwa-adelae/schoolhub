@@ -20,11 +20,11 @@ const page = async () => {
 			</TopNavbar>
 			<div className="container py-4">
 				<PageHeader
-					firstName={user.firstName}
-					lastName={user.lastName}
-					identity={user.identity}
-					department={user.department}
-					picture={user.picture}
+					firstName={user?.firstName}
+					lastName={user?.lastName}
+					identity={user?.identity}
+					department={user?.department}
+					picture={user?.picture}
 				/>
 				<div className="my-6">
 					<h3 className="font-bold text-lg mb-4">Add new course</h3>

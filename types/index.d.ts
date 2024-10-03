@@ -40,3 +40,17 @@ declare interface RemoveUrlQueryParams {
 	params: string;
 	keysToRemove: string[];
 }
+
+declare interface GetLecturerCoursesProps {
+	query: string;
+	limit: number;
+	page: number;
+	userId: string;
+}
+
+declare interface CreateNewCourseProps {
+	code: string;
+	title: string;
+	unit: string;
+	userId: string;
+}

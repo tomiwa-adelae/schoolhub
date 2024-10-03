@@ -61,11 +61,11 @@ const page = async () => {
 			</TopNavbar>
 			<div className="container py-4">
 				<PageHeader
-					firstName={user.firstName}
-					lastName={user.lastName}
-					identity={user.identity}
-					department={user.department}
-					picture={user.picture}
+					firstName={user?.firstName}
+					lastName={user?.lastName}
+					identity={user?.identity}
+					department={user?.department}
+					picture={user?.picture}
 				>
 					<Button className="w-full md:w-auto" asChild>
 						<Link href="/exeats/create">Apply for new exeat</Link>

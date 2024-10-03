@@ -20,11 +20,11 @@ const page = async () => {
 			<div className="py-4">
 				<div className="container">
 					<PageHeader
-						firstName={user.firstName}
-						lastName={user.lastName}
-						identity={user.identity}
-						department={user.department}
-						picture={user.picture}
+						firstName={user?.firstName}
+						lastName={user?.lastName}
+						identity={user?.identity}
+						department={user?.department}
+						picture={user?.picture}
 					>
 						<Button className="w-full md:w-auto" asChild>
 							<Link href="/chats/new">New chat</Link>

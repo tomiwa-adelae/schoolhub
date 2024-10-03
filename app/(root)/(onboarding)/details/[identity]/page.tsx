@@ -1,8 +1,10 @@
+import { LecturerForm } from "@/components/forms/LecturerForm";
 import { StudentForm } from "@/components/forms/StudentForm";
 import { getUserById } from "@/lib/actions/user.actions";
 import { auth } from "@clerk/nextjs";
 
 import { Irish_Grover } from "next/font/google";
+import { redirect } from "next/navigation";
 
 const irishGrover = Irish_Grover({
 	subsets: ["latin"],
@@ -14,6 +16,8 @@ const page = async ({ params: { identity } }: SearchParamProps) => {
 
 	const user = await getUserById(userId!);
 
+	if (user?.successfulBoarding) return redirect("/dashboard");
+
 	return (
 		<div>
 			<h1
@@ -21,7 +25,10 @@ const page = async ({ params: { identity } }: SearchParamProps) => {
 			>
 				Tell us a little about yourself to personalize your experience
 			</h1>
-			<StudentForm id={userId!} user={user} />
+			{identity === "student" && <StudentForm id={userId!} user={user} />}
+			{identity === "lecturer" && (
+				<LecturerForm id={userId!} user={user} />
+			)}
 		</div>
 	);
 };

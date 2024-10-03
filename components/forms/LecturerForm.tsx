@@ -27,44 +27,38 @@ import {
 
 import { toast } from "@/components/ui/use-toast";
 import { IUser } from "@/lib/database/models/user.model";
-import { departments, faculties, levels } from "@/constants";
-import { updateBoardingUserDetails } from "@/lib/actions/user.actions";
+import { departments, faculties, titles } from "@/constants";
+import { updateBoardingLecturerDetails } from "@/lib/actions/user.actions";
 import { useRouter } from "next/navigation";
-import { StudentFormSchema } from "@/lib/validation";
+import { LecturerFormSchema } from "@/lib/validation";
 
-export function StudentForm({ id, user }: { id: string; user: IUser }) {
+export function LecturerForm({ id, user }: { id: string; user: IUser }) {
 	const router = useRouter();
 
-	const form = useForm<z.infer<typeof StudentFormSchema>>({
-		resolver: zodResolver(StudentFormSchema),
+	const form = useForm<z.infer<typeof LecturerFormSchema>>({
+		resolver: zodResolver(LecturerFormSchema),
 		defaultValues: {
 			firstName: user.firstName || "",
 			lastName: user.lastName || "",
 			email: user.email || "",
-			matricNumber: "",
 			phoneNumber: "",
-			parentPhoneNumber: "",
-			level: "",
 			department: "",
 			faculty: "",
 		},
 	});
 
-	async function onSubmit(data: z.infer<typeof StudentFormSchema>) {
+	async function onSubmit(data: z.infer<typeof LecturerFormSchema>) {
 		try {
 			const user = {
 				firstName: data.firstName,
 				lastName: data.lastName,
 				email: data.email,
 				phoneNumber: data.phoneNumber,
-				parentPhoneNumber: data.parentPhoneNumber,
-				matricNumber: data.matricNumber,
-				level: data.level,
 				department: data.department,
 				faculty: data.faculty,
 			};
 
-			await updateBoardingUserDetails(id, user);
+			await updateBoardingLecturerDetails(id, user);
 
 			toast({
 				title: "Success!",
@@ -125,86 +119,19 @@ export function StudentForm({ id, user }: { id: string; user: IUser }) {
 				/>
 				<FormField
 					control={form.control}
-					name="matricNumber"
+					name="phoneNumber"
 					render={({ field }) => (
 						<FormItem>
-							<FormLabel>
-								Matriculation/Admission number
-							</FormLabel>
+							<FormLabel>Phone number</FormLabel>
 							<FormControl>
-								<Input placeholder="20N07001" {...field} />
+								<Input placeholder="0812 345 6789" {...field} />
 							</FormControl>
 							<FormMessage />
 						</FormItem>
 					)}
 				/>
+
 				<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-					<FormField
-						control={form.control}
-						name="phoneNumber"
-						render={({ field }) => (
-							<FormItem>
-								<FormLabel>Phone number</FormLabel>
-								<FormControl>
-									<Input
-										placeholder="0812 345 6789"
-										{...field}
-									/>
-								</FormControl>
-								<FormMessage />
-							</FormItem>
-						)}
-					/>
-					<FormField
-						control={form.control}
-						name="parentPhoneNumber"
-						render={({ field }) => (
-							<FormItem>
-								<FormLabel>
-									Parent/Guardian&apos;s phone number
-								</FormLabel>
-								<FormControl>
-									<Input
-										placeholder="0812 345 6789"
-										{...field}
-									/>
-								</FormControl>
-								<FormMessage />
-							</FormItem>
-						)}
-					/>
-				</div>
-				<div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-					<FormField
-						control={form.control}
-						name="level"
-						render={({ field }) => (
-							<FormItem>
-								<FormLabel>Level</FormLabel>
-								<Select
-									onValueChange={field.onChange}
-									defaultValue={field.value}
-								>
-									<FormControl>
-										<SelectTrigger>
-											<SelectValue placeholder="Select a level" />
-										</SelectTrigger>
-									</FormControl>
-									<SelectContent>
-										{levels.map((level, index) => (
-											<SelectItem
-												key={index}
-												value={level}
-											>
-												{level}
-											</SelectItem>
-										))}
-									</SelectContent>
-								</Select>
-								<FormMessage />
-							</FormItem>
-						)}
-					/>
 					<FormField
 						control={form.control}
 						name="department"

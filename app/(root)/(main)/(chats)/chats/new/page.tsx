@@ -20,11 +20,11 @@ const page = async () => {
 			<div className="py-4">
 				<div className="container">
 					<PageHeader
-						firstName={user.firstName}
-						lastName={user.lastName}
-						identity={user.identity}
-						department={user.department}
-						picture={user.picture}
+						firstName={user?.firstName}
+						lastName={user?.lastName}
+						identity={user?.identity}
+						department={user?.department}
+						picture={user?.picture}
 					/>
 				</div>
 				<h3 className="font-bold text-lg mt-6 mb-2 container">

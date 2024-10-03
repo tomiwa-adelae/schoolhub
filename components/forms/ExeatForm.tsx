@@ -26,7 +26,7 @@ import {
 	PopoverTrigger,
 } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
-import { ExeatFormSchema } from "@/lib/validaition";
+import { ExeatFormSchema } from "@/lib/validation";
 
 export function ExeatForm() {
 	const form = useForm<z.infer<typeof ExeatFormSchema>>({

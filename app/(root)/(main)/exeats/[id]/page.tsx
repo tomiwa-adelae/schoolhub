@@ -16,11 +16,11 @@ const page = async () => {
 			<TopNavbar />
 			<div className="container py-4">
 				<PageHeader
-					firstName={user.firstName}
-					lastName={user.lastName}
-					identity={user.identity}
-					department={user.department}
-					picture={user.picture}
+					firstName={user?.firstName}
+					lastName={user?.lastName}
+					identity={user?.identity}
+					department={user?.department}
+					picture={user?.picture}
 				>
 					{/* <Button asChild className="w-full md:w-auto">
 						<Link href="/">Approve exeat</Link>

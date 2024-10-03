@@ -79,22 +79,86 @@ export const updateIdentity = async (clerkId: string, identity: string) => {
 	}
 };
 
-export const updateBoardingDetails = async (clerkId: string, user: any) => {
+export const updateBoardingUserDetails = async (clerkId: string, user: any) => {
 	try {
 		await connectToDatabase();
 		const boardingUser = await User.findOne({ clerkId });
 
 		if (!boardingUser) throw new Error("User not found!");
 
-		boardingUser.firstName = user.firstName;
-		boardingUser.lastName = user.lastName;
-		boardingUser.email = user.email;
-		boardingUser.matricNumber = user.matricNumber;
-		boardingUser.phoneNumber = user.phoneNumber;
-		boardingUser.parentPhoneNumber = user.parentPhoneNumber;
-		boardingUser.level = user.level;
-		boardingUser.department = user.department;
-		boardingUser.faculty = user.faculty;
+		const {
+			firstName,
+			lastName,
+			email,
+			phoneNumber,
+			matricNumber,
+			parentPhoneNumber,
+			level,
+			department,
+			faculty,
+		} = user;
+
+		if (
+			!firstName ||
+			!lastName ||
+			!email ||
+			!phoneNumber ||
+			!matricNumber ||
+			!parentPhoneNumber ||
+			!level ||
+			!department ||
+			!faculty
+		)
+			throw new Error("Please enter all fields!");
+
+		boardingUser.firstName = firstName;
+		boardingUser.lastName = lastName;
+		boardingUser.email = email;
+		boardingUser.matricNumber = matricNumber;
+		boardingUser.phoneNumber = phoneNumber;
+		boardingUser.parentPhoneNumber = parentPhoneNumber;
+		boardingUser.level = level;
+		boardingUser.department = department;
+		boardingUser.faculty = faculty;
+		boardingUser.successfulBoarding = true;
+
+		await boardingUser.save();
+
+		return JSON.parse(JSON.stringify({ status: "OK" }));
+	} catch (error) {
+		handleError(error);
+	}
+};
+
+export const updateBoardingLecturerDetails = async (
+	clerkId: string,
+	user: any
+) => {
+	try {
+		await connectToDatabase();
+		const boardingUser = await User.findOne({ clerkId });
+
+		if (!boardingUser) throw new Error("User not found!");
+
+		const { firstName, lastName, email, phoneNumber, department, faculty } =
+			user;
+
+		if (
+			!firstName ||
+			!lastName ||
+			!email ||
+			!phoneNumber ||
+			!department ||
+			!faculty
+		)
+			throw new Error("Please enter all fields!");
+
+		boardingUser.firstName = firstName;
+		boardingUser.lastName = lastName;
+		boardingUser.email = email;
+		boardingUser.phoneNumber = phoneNumber;
+		boardingUser.department = department;
+		boardingUser.faculty = faculty;
 		boardingUser.successfulBoarding = true;
 
 		await boardingUser.save();
