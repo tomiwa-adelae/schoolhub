@@ -4,7 +4,11 @@ import Pagination from "@/components/Pagination";
 import SearchBar from "@/components/SearchBar";
 import TopNavbar from "@/components/shared/TopNavbar";
 import { Button } from "@/components/ui/button";
-import { getLecturerCourses } from "@/lib/actions/course.actions";
+import { COURSES_LIMITS } from "@/constants";
+import {
+	getLecturerCourses,
+	getStudentCourses,
+} from "@/lib/actions/course.actions";
 import { getUserById } from "@/lib/actions/user.actions";
 import { IUser } from "@/lib/database/models/user.model";
 import { auth } from "@clerk/nextjs";
@@ -18,14 +22,23 @@ const page = async ({ searchParams }: SearchParamProps) => {
 
 	const user: IUser = await getUserById(userId!);
 
-	const courses = await getLecturerCourses({
-		page,
-		query,
-		limit: 2,
-		userId: user?._id,
-	});
+	let courses;
 
-	console.log(courses);
+	if (user?.identity === "lecturer") {
+		courses = await getLecturerCourses({
+			page,
+			query,
+			limit: COURSES_LIMITS,
+			userId: user?._id,
+		});
+	} else if (user?.identity === "student") {
+		courses = await getStudentCourses({
+			page,
+			query,
+			limit: COURSES_LIMITS,
+			userId: user?._id,
+		});
+	}
 
 	return (
 		<main>
@@ -57,33 +70,32 @@ const page = async ({ searchParams }: SearchParamProps) => {
 				<div className="my-6">
 					<h3 className="font-bold text-lg mb-4">My courses</h3>
 					<div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-						{courses?.data?.map(
-							(course: {
-								title: string;
-								code: string;
-								unit: string;
-								_id: string;
-								user: {
-									email: string;
-									firstName: string;
-									lastName: string;
-									picture: string;
-									identity: string;
-								};
-							}) => (
-								<Course
-									key={course._id}
-									title={course.title}
-									code={course.code}
-									unit={course.unit}
-									firstName={course.user.firstName}
-									lastName={course.user.lastName}
-									identity={course.user.identity}
-									picture={course.user.picture}
-									_id={course._id}
-								/>
-							)
-						)}
+						{courses?.data?.map((course: CourseProps) => (
+							<Course
+								key={course._id}
+								title={course.title || course?.course.title}
+								code={course.code || course?.course.code}
+								unit={course.unit || course?.course.unit}
+								firstName={
+									course.user.firstName ||
+									course.course.user.firstName
+								}
+								lastName={
+									course.user.lastName ||
+									course.course.user.lastName
+								}
+								identity={user?.identity!}
+								picture={
+									course.user.picture ||
+									course.course.user.picture
+								}
+								_id={
+									user?.identity === "student"
+										? course.course._id
+										: course._id
+								}
+							/>
+						))}
 					</div>
 					{courses?.data?.length === 0 && (
 						<p className="text-sm italic text-center mt-4">

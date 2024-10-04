@@ -26,7 +26,10 @@ const Course = ({
 			<div className="flex items-center justify-start gap-2">
 				<Link href="/">
 					<Image
-						src={picture}
+						src={
+							picture ||
+							"https://icon-library.com/images/anonymous-avatar-icon/anonymous-avatar-icon-25.jpg"
+						}
 						alt={`${firstName} ${lastName}'s picture`}
 						width={1000}
 						height={1000}

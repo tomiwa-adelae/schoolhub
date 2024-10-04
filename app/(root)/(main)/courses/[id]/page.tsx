@@ -2,6 +2,7 @@ import Attendance from "@/components/Attendance";
 import { AttendanceChart } from "@/components/AttendanceChart";
 import CourseHeader from "@/components/CourseHeader";
 import Document from "@/components/Document";
+import NotFound from "@/components/shared/NotFound";
 import TopNavbar from "@/components/shared/TopNavbar";
 import { Button } from "@/components/ui/button";
 import { getCourseById } from "@/lib/actions/course.actions";
@@ -18,22 +19,29 @@ const page = async ({ params: { id } }: { params: { id: string } }) => {
 
 	const course = await getCourseById(id!);
 
+	if (course.status === 400) return <NotFound message={course.message} />;
+
+	console.log(course);
+
 	return (
 		<main>
 			<TopNavbar />
 			<div className="container py-4">
 				<CourseHeader
-					firstName={user.firstName}
-					lastName={user.lastName}
-					department={user.department}
-					picture={user.picture}
+					firstName={course?.user.firstName}
+					lastName={course?.user?.lastName}
+					department={course?.user?.department}
+					picture={course?.user?.picture}
 					courseTitle={course?.title}
 					courseUnit={course?.unit}
 					courseCode={course?.code}
 				>
 					{user.identity === "student" && (
 						<Button asChild className="w-full md:w-auto">
-							<Link href="/">Message Dr. P. C. Amalu</Link>
+							<Link href={`/chats/${course?.user._id}`}>
+								Message {course?.user.firstName}{" "}
+								{course?.user.lastName}
+							</Link>
 						</Button>
 					)}
 				</CourseHeader>
@@ -51,14 +59,19 @@ const page = async ({ params: { id } }: { params: { id: string } }) => {
 							height={1000}
 							className="w-12 h-12 object-cover"
 						/>
-						<h3 className="font-bold text-base">6</h3>
+						<h3 className="font-bold text-base">
+							{user.identity === "student" ? course?.unit : "6"}
+						</h3>
 						<p className="text-xs text-gray-400">
 							{user.identity === "student" ? "Unit" : "Students"}
 						</p>
 					</div>
 					{user.identity === "student" ? (
 						<Image
-							src={"/assets/user.jpg"}
+							src={
+								course?.user.picture ||
+								"https://icon-library.com/images/anonymous-avatar-icon/anonymous-avatar-icon-25.jpg"
+							}
 							alt={"Lecturer"}
 							width={1000}
 							height={1000}

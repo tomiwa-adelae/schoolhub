@@ -6,7 +6,14 @@ export function cn(...inputs: ClassValue[]) {
 	return twMerge(clsx(inputs));
 }
 
-export const handleError = (error: unknown) => console.log(error);
+export const handleError = (error: any) => {
+	console.log(error);
+	return {
+		status: error?.status || 400,
+		message:
+			error?.message || "Oops! Course does not exist! Try again later.",
+	};
+};
 
 export function formUrlQuery({ params, key, value }: UrlQueryParams) {
 	const currentUrl = qs.parse(params);

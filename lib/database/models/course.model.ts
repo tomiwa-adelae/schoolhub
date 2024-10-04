@@ -1,4 +1,13 @@
-import { model, models, Schema } from "mongoose";
+import { model, Schema, ObjectId, models } from "mongoose";
+
+export interface ICourse {
+	user: ObjectId; // Reference to the User model
+	title: string; // Course title
+	code: string; // Unique course code
+	unit: string; // Course unit
+	createdAt?: Date; // Timestamp for creation
+	updatedAt?: Date; // Timestamp for last update
+}
 
 const courseSchema = new Schema(
 	{

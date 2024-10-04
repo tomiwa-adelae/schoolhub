@@ -85,3 +85,5 @@ export const navLinks = [
 		icon: FolderKey,
 	},
 ];
+
+export const COURSES_LIMITS = 2;

@@ -6,6 +6,7 @@ import PageHeader from "@/components/PageHeader";
 import TopNavbar from "@/components/shared/TopNavbar";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
+import { COURSES_LIMITS } from "@/constants";
 import { getLecturerCourses } from "@/lib/actions/course.actions";
 import { getUserById } from "@/lib/actions/user.actions";
 import { auth } from "@clerk/nextjs";
@@ -24,7 +25,7 @@ const page = async ({ searchParams }: SearchParamProps) => {
 	const courses = await getLecturerCourses({
 		page,
 		query,
-		limit: 2,
+		limit: COURSES_LIMITS,
 		userId: user?._id,
 	});
 
