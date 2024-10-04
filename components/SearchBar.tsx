@@ -5,7 +5,6 @@ import { formUrlQuery, removeKeysFromQuery } from "@/lib/utils";
 import { Search } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import { Button } from "./ui/button";
 import { MobileSearchBar } from "./MobileSearchBar";
 
 const SearchBar = ({ type }: { type?: string }) => {

@@ -7,6 +7,7 @@ import { identities } from "@/constants";
 import { CircleCheck } from "lucide-react";
 import Image from "next/image";
 import { updateIdentity } from "@/lib/actions/user.actions";
+import { toast } from "@/components/ui/use-toast";
 
 const Identity = ({ id }: { id: string }) => {
 	const router = useRouter();
@@ -17,12 +18,30 @@ const Identity = ({ id }: { id: string }) => {
 	const handleIdentity = async () => {
 		try {
 			setLoading(true);
-			await updateIdentity(id, identity);
+			const res = await updateIdentity(id, identity);
 
 			setLoading(false);
+
+			if (res.status == 400)
+				return toast({
+					title: "Error!",
+					description: res?.message,
+					variant: "destructive",
+				});
+
+			toast({
+				title: "Success!",
+				description: res?.message,
+			});
+
 			router.push(`/details/${identity}`);
 		} catch (error) {
-			console.log(error);
+			toast({
+				title: "Error!",
+				description: "An error occurred!",
+				variant: "destructive",
+			});
+
 			setLoading(false);
 		} finally {
 			setLoading(false);

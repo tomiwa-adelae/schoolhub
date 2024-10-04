@@ -24,7 +24,15 @@ const irishGrover = Irish_Grover({
 	weight: ["400"],
 });
 
-export function MobileNavbar() {
+export function MobileNavbar({
+	firstName,
+	lastName,
+	email,
+}: {
+	firstName: string;
+	lastName: string;
+	email: string;
+}) {
 	const pathname = usePathname();
 
 	const { user } = useUser();
@@ -92,11 +100,9 @@ export function MobileNavbar() {
 						<UserButton afterSignOutUrl="/" />
 						<div className="flex items-start flex-col justify-center space-y-1">
 							<h3 className="text-sm font-bold">
-								{user?.firstName} {user?.lastName}
+								{firstName} {lastName}
 							</h3>
-							<small className="text-xs">
-								{user?.emailAddresses[0].emailAddress}
-							</small>
+							<small className="text-xs">{email}</small>
 						</div>
 					</div>
 				</SignedIn>

@@ -64,14 +64,26 @@ export function StudentForm({ id, user }: { id: string; user: IUser }) {
 				faculty: data.faculty,
 			};
 
-			await updateBoardingUserDetails(id, user);
+			const res = await updateBoardingUserDetails(id, user);
+
+			if (res.status == 400)
+				return toast({
+					title: "Error!",
+					description: res?.message,
+					variant: "destructive",
+				});
 
 			toast({
 				title: "Success!",
+				description: res?.message,
 			});
 			router.push("/success");
 		} catch (error) {
-			console.log(error);
+			toast({
+				title: "Error!",
+				description: "An error occurred!",
+				variant: "destructive",
+			});
 		}
 	}
 

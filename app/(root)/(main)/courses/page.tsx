@@ -94,6 +94,7 @@ const page = async ({ searchParams }: SearchParamProps) => {
 										? course.course._id
 										: course._id
 								}
+								students={course.students}
 							/>
 						))}
 					</div>
@@ -107,7 +108,7 @@ const page = async ({ searchParams }: SearchParamProps) => {
 						</p>
 					)}
 				</div>
-				{courses?.totalPages !== 1 && (
+				{courses?.totalPages! > 1 && (
 					<Pagination totalPages={courses?.totalPages} page={page} />
 				)}
 			</div>

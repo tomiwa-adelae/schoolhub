@@ -5,7 +5,7 @@ import Document from "@/components/Document";
 import NotFound from "@/components/shared/NotFound";
 import TopNavbar from "@/components/shared/TopNavbar";
 import { Button } from "@/components/ui/button";
-import { getCourseById } from "@/lib/actions/course.actions";
+import { getCourseById, getStudents } from "@/lib/actions/course.actions";
 import { getUserById } from "@/lib/actions/user.actions";
 import { IUser } from "@/lib/database/models/user.model";
 import { auth } from "@clerk/nextjs";
@@ -19,9 +19,13 @@ const page = async ({ params: { id } }: { params: { id: string } }) => {
 
 	const course = await getCourseById(id!);
 
-	if (course.status === 400) return <NotFound message={course.message} />;
+	let students;
 
-	console.log(course);
+	if (user?.identity === "lecturer") {
+		students = await getStudents({ courseId: id, userId: user?._id });
+	}
+
+	if (course.status === 400) return <NotFound message={course.message} />;
 
 	return (
 		<main>
@@ -60,7 +64,9 @@ const page = async ({ params: { id } }: { params: { id: string } }) => {
 							className="w-12 h-12 object-cover"
 						/>
 						<h3 className="font-bold text-base">
-							{user.identity === "student" ? course?.unit : "6"}
+							{user.identity === "student"
+								? course?.unit
+								: students?.length}
 						</h3>
 						<p className="text-xs text-gray-400">
 							{user.identity === "student" ? "Unit" : "Students"}

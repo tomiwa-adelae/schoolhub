@@ -45,10 +45,28 @@ export const getLecturerCourses = async ({
 			.skip(skipAmount)
 			.limit(limit);
 
-		const courseCount = await Course.countDocuments({ ...keyword });
+		const courseCount = await Course.countDocuments({
+			...keyword,
+			user: userId,
+		});
+
+		// Get the total number of students offering each course
+		const coursesWithStudentCount = await Promise.all(
+			courses.map(async (course) => {
+				// Query the StudentCourse collection to count how many students are offering this course
+				const students = await StudentCourse.countDocuments({
+					course: course._id,
+				});
+
+				return {
+					...course.toObject(), // Convert the course to a plain object
+					students, // Add the student count to the course object
+				};
+			})
+		);
 
 		return {
-			data: JSON.parse(JSON.stringify(courses)),
+			data: JSON.parse(JSON.stringify(coursesWithStudentCount)),
 			totalPages: Math.ceil(courseCount / limit),
 		};
 	} catch (error: any) {
@@ -72,44 +90,72 @@ export const getStudentCourses = async ({
 	try {
 		await connectToDatabase();
 
-		const keyword = query
-			? {
-					$or: [
-						{
-							title: {
-								$regex: query,
-								$options: "i",
-							},
-						},
-						{
-							code: {
-								$regex: query,
-								$options: "i",
-							},
-						},
-					],
-			  }
-			: {};
-
 		const skipAmount = (Number(page) - 1) * limit;
 
-		const courses = await StudentCourse.find({ ...keyword, user: userId })
+		const studentCourses = await StudentCourse.find({ user: userId })
 			.populate({
 				path: "course",
 				populate: { path: "user" },
 			})
-			.sort({ createdAt: -1 })
-			.skip(skipAmount)
-			.limit(limit);
+			.sort({ createdAt: -1 });
 
-		const courseCount = await StudentCourse.countDocuments({ ...keyword });
+		const filteredCourses = studentCourses.filter((studentCourse) => {
+			const course = studentCourse.course;
+			if (!course) return false;
+
+			const matchesTitle = course.title
+				?.toLowerCase()
+				.includes(query.toLowerCase());
+			const matchesCode = course.code
+				?.toLowerCase()
+				.includes(query.toLowerCase());
+			const matchesUnit = course.unit
+				?.toLowerCase()
+				.includes(query.toLowerCase());
+			const matchesLecturerFirstName = course.user.firstName
+				?.toLowerCase()
+				.includes(query.toLowerCase());
+			const matchesLecturerLastName = course.user.lastName
+				?.toLowerCase()
+				.includes(query.toLowerCase());
+			const matchesLecturerEmail = course.user.email
+				?.toLowerCase()
+				.includes(query.toLowerCase());
+			const matchesLecturerDepartment = course.user.department
+				?.toLowerCase()
+				.includes(query.toLowerCase());
+			const matchesLecturerFaculty = course.user.faculty
+				?.toLowerCase()
+				.includes(query.toLowerCase());
+			const matchesLecturerPhoneNumber = course.user.phoneNumber
+				?.toLowerCase()
+				.includes(query.toLowerCase());
+
+			return (
+				matchesTitle ||
+				matchesCode ||
+				matchesUnit ||
+				matchesLecturerFirstName ||
+				matchesLecturerLastName ||
+				matchesLecturerEmail ||
+				matchesLecturerDepartment ||
+				matchesLecturerFaculty ||
+				matchesLecturerPhoneNumber
+			);
+		});
+
+		const paginatedCourses = filteredCourses.slice(
+			skipAmount,
+			skipAmount + limit
+		);
+
+		const courseCount = filteredCourses.length;
 
 		return {
-			data: JSON.parse(JSON.stringify(courses)),
+			data: JSON.parse(JSON.stringify(paginatedCourses)),
 			totalPages: Math.ceil(courseCount / limit),
 		};
 	} catch (error: any) {
-		handleError(error);
 		return {
 			status: error?.status || 400,
 			message:
@@ -158,7 +204,10 @@ export const createNewCourse = async ({
 				message: `An error occurred! ${code} not created!`,
 			};
 
-		return JSON.parse(JSON.stringify(course));
+		return {
+			course: JSON.parse(JSON.stringify(course)),
+			message: `You have successfully created ${course.code} - ${course.title}.`,
+		};
 	} catch (error: any) {
 		handleError(error);
 		return {
@@ -325,6 +374,45 @@ export const addNewCourse = async ({
 			message:
 				error?.message ||
 				"Oops! Course does not exist! Try again later.",
+		};
+	}
+};
+
+// Get students offering a particular course by the lecturer
+export const getStudents = async ({
+	courseId,
+	userId,
+}: {
+	courseId: string;
+	userId: string;
+}) => {
+	try {
+		await connectToDatabase();
+
+		const user = await User.findById(userId);
+
+		if (user.identity === "student")
+			return {
+				status: 400,
+				message:
+					"You are not authorized to access this. Try again later",
+			};
+
+		const students = await StudentCourse.find({ course: courseId })
+			.populate("user")
+			.populate("course")
+			.sort({
+				createdAt: -1,
+			});
+
+		return JSON.parse(JSON.stringify(students));
+	} catch (error: any) {
+		handleError(error);
+		return {
+			status: error?.status || 400,
+			message:
+				error?.message ||
+				"Oops! Couldn't find students! Try again later.",
 		};
 	}
 };

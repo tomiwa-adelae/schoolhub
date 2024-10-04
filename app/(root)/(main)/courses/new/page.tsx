@@ -25,8 +25,6 @@ const page = async ({ searchParams }: SearchParamProps) => {
 		userId: user?._id,
 	});
 
-	console.log(courses);
-
 	return (
 		<main>
 			<TopNavbar>

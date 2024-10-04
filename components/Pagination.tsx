@@ -26,6 +26,7 @@ const Pagination = ({
 
 		router.push(newUrl, { scroll: false });
 	};
+
 	return (
 		<div className="flex items-center justify-between">
 			<Button

@@ -12,10 +12,16 @@ const irishGrover = Irish_Grover({
 	weight: ["400"],
 });
 
-const LeftSideBar = () => {
+const LeftSideBar = ({
+	firstName,
+	lastName,
+	email,
+}: {
+	firstName: string;
+	lastName: string;
+	email: string;
+}) => {
 	const pathname = usePathname();
-
-	const { user } = useUser();
 
 	return (
 		<aside className="fixed h-screen hidden md:flex items-start justify-center flex-col top-0 left-0 w-60 px-4 py-4 border-r-2 border-dashed border-gray-400">
@@ -62,11 +68,9 @@ const LeftSideBar = () => {
 					<UserButton afterSignOutUrl="/" />
 					<div className="flex items-start flex-col justify-center space-y-0  break-all">
 						<h3 className="text-sm font-bold line-clamp-1">
-							{user?.firstName} {user?.lastName}
+							{firstName} {lastName}
 						</h3>
-						<p className="text-xs">
-							{user?.emailAddresses[0].emailAddress}
-						</p>
+						<p className="text-xs">{email}</p>
 					</div>
 				</div>
 			</SignedIn>

@@ -46,7 +46,7 @@ const NewCourse = ({
 
 			toast({
 				title: "Success!",
-				description: res.message,
+				description: res?.message,
 			});
 
 			setLoading(false);

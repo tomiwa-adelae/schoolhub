@@ -11,6 +11,7 @@ const Course = ({
 	identity,
 	picture,
 	_id,
+	students,
 }: {
 	title: string;
 	unit: string;
@@ -20,6 +21,7 @@ const Course = ({
 	identity: string;
 	picture: string;
 	_id: string;
+	students: string;
 }) => {
 	return (
 		<div className="border-2 border-dashed border-gray-400 rounded-md p-3">
@@ -64,7 +66,8 @@ const Course = ({
 				<div className="flex items-center justify-between gap-2 font-bold text-xs mt-3">
 					<small>Your students</small>
 					<small>
-						20<span className="text-gray-400"> students</span>
+						{students}
+						<span className="text-gray-400"> students</span>
 					</small>
 				</div>
 			)}

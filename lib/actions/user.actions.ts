@@ -53,11 +53,19 @@ export const getUserById = async (clerkId: string) => {
 
 		const user = await User.findOne({ clerkId });
 
-		if (!user) throw new Error("User not found! An error occurred!");
-
+		if (!user)
+			return {
+				status: 400,
+				message: "User not found. An error occurred!",
+			};
 		return JSON.parse(JSON.stringify(user));
-	} catch (error) {
+	} catch (error: any) {
 		handleError(error);
+		return {
+			status: error?.status || 400,
+			message:
+				error?.message || "Oops! Couldn't get user! Try again later.",
+		};
 	}
 };
 
@@ -67,15 +75,29 @@ export const updateIdentity = async (clerkId: string, identity: string) => {
 
 		const updatedIdentity = await User.findOne({ clerkId });
 
-		if (!updatedIdentity) throw new Error("User not found!");
+		if (!updatedIdentity)
+			return {
+				status: 400,
+				message: "User not found. An error occurred!",
+			};
 
 		updatedIdentity.identity = identity;
 
 		await updatedIdentity.save();
 
-		return JSON.parse(JSON.stringify({ status: "OK" }));
-	} catch (error) {
+		return JSON.parse(
+			JSON.stringify({
+				message: "You have successfully updated your identity.",
+			})
+		);
+	} catch (error: any) {
 		handleError(error);
+		return {
+			status: error?.status || 400,
+			message:
+				error?.message ||
+				"Oops! Couldn't update your identity! Try again later.",
+		};
 	}
 };
 
@@ -84,7 +106,11 @@ export const updateBoardingUserDetails = async (clerkId: string, user: any) => {
 		await connectToDatabase();
 		const boardingUser = await User.findOne({ clerkId });
 
-		if (!boardingUser) throw new Error("User not found!");
+		if (!boardingUser)
+			return {
+				status: 400,
+				message: "User not found. An error occurred!",
+			};
 
 		const {
 			firstName,
@@ -109,7 +135,10 @@ export const updateBoardingUserDetails = async (clerkId: string, user: any) => {
 			!department ||
 			!faculty
 		)
-			throw new Error("Please enter all fields!");
+			return {
+				status: 400,
+				message: "Please enter all fields!",
+			};
 
 		boardingUser.firstName = firstName;
 		boardingUser.lastName = lastName;
@@ -124,9 +153,19 @@ export const updateBoardingUserDetails = async (clerkId: string, user: any) => {
 
 		await boardingUser.save();
 
-		return JSON.parse(JSON.stringify({ status: "OK" }));
-	} catch (error) {
+		return JSON.parse(
+			JSON.stringify({
+				message: "You have successfully updated your profile.",
+			})
+		);
+	} catch (error: any) {
 		handleError(error);
+		return {
+			status: error?.status || 400,
+			message:
+				error?.message ||
+				"Oops! Couldn't update your profile! Try again later.",
+		};
 	}
 };
 
@@ -138,7 +177,11 @@ export const updateBoardingLecturerDetails = async (
 		await connectToDatabase();
 		const boardingUser = await User.findOne({ clerkId });
 
-		if (!boardingUser) throw new Error("User not found!");
+		if (!boardingUser)
+			return {
+				status: 400,
+				message: "User not found. An error occurred!",
+			};
 
 		const { firstName, lastName, email, phoneNumber, department, faculty } =
 			user;
@@ -151,7 +194,10 @@ export const updateBoardingLecturerDetails = async (
 			!department ||
 			!faculty
 		)
-			throw new Error("Please enter all fields!");
+			return {
+				status: 400,
+				message: "Please enter all fields!",
+			};
 
 		boardingUser.firstName = firstName;
 		boardingUser.lastName = lastName;
@@ -163,8 +209,18 @@ export const updateBoardingLecturerDetails = async (
 
 		await boardingUser.save();
 
-		return JSON.parse(JSON.stringify({ status: "OK" }));
-	} catch (error) {
+		return JSON.parse(
+			JSON.stringify({
+				message: "You have successfully updated your profile.",
+			})
+		);
+	} catch (error: any) {
 		handleError(error);
+		return {
+			status: error?.status || 400,
+			message:
+				error?.message ||
+				"Oops! Couldn't update your profile! Try again later.",
+		};
 	}
 };

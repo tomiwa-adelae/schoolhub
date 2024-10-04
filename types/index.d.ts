@@ -74,6 +74,7 @@ declare interface CourseProps {
 	code: string;
 	unit: string;
 	_id: string;
+	students: string;
 	user: {
 		email: string;
 		firstName: string;

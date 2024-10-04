@@ -7,7 +7,10 @@ import TopNavbar from "@/components/shared/TopNavbar";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { COURSES_LIMITS } from "@/constants";
-import { getLecturerCourses } from "@/lib/actions/course.actions";
+import {
+	getLecturerCourses,
+	getStudentCourses,
+} from "@/lib/actions/course.actions";
 import { getUserById } from "@/lib/actions/user.actions";
 import { auth } from "@clerk/nextjs";
 import { FilePlus, Plus } from "lucide-react";
@@ -22,14 +25,23 @@ const page = async ({ searchParams }: SearchParamProps) => {
 
 	const user = await getUserById(userId!);
 
-	const courses = await getLecturerCourses({
-		page,
-		query,
-		limit: COURSES_LIMITS,
-		userId: user?._id,
-	});
+	let courses;
 
-	console.log(courses);
+	if (user?.identity === "lecturer") {
+		courses = await getLecturerCourses({
+			page,
+			query,
+			limit: COURSES_LIMITS,
+			userId: user?._id,
+		});
+	} else if (user?.identity === "student") {
+		courses = await getStudentCourses({
+			page,
+			query,
+			limit: COURSES_LIMITS,
+			userId: user?._id,
+		});
+	}
 
 	return (
 		<main>
@@ -81,37 +93,44 @@ const page = async ({ searchParams }: SearchParamProps) => {
 									</h3>
 									<div className="grid grid-cols-1 gap-4">
 										{courses?.data?.map(
-											(course: {
-												title: string;
-												code: string;
-												unit: string;
-												_id: string;
-												user: {
-													email: string;
-													firstName: string;
-													lastName: string;
-													picture: string;
-													identity: string;
-												};
-											}) => (
+											(course: CourseProps) => (
 												<Course
 													key={course._id}
-													title={course.title}
-													code={course.code}
-													unit={course.unit}
+													title={
+														course.title ||
+														course?.course.title
+													}
+													code={
+														course.code ||
+														course?.course.code
+													}
+													unit={
+														course.unit ||
+														course?.course.unit
+													}
 													firstName={
-														course.user.firstName
+														course.user.firstName ||
+														course.course.user
+															.firstName
 													}
 													lastName={
-														course.user.lastName
+														course.user.lastName ||
+														course.course.user
+															.lastName
 													}
-													identity={
-														course.user.identity
-													}
+													identity={user?.identity!}
 													picture={
-														course.user.picture
+														course.user.picture ||
+														course.course.user
+															.picture
 													}
-													_id={course._id}
+													_id={
+														user?.identity ===
+														"student"
+															? course.course._id
+															: course._id
+													}
+													students={course.students}
 												/>
 											)
 										)}
@@ -125,17 +144,19 @@ const page = async ({ searchParams }: SearchParamProps) => {
 											any course yet. Start today
 										</p>
 									)}
-									<div className="text-center mt-4">
-										<Button
-											size={"sm"}
-											asChild
-											variant={"ghost"}
-										>
-											<Link href="/courses">
-												Show all courses
-											</Link>
-										</Button>
-									</div>
+									{courses?.data.length >= 3 && (
+										<div className="text-center mt-4">
+											<Button
+												size={"sm"}
+												asChild
+												variant={"ghost"}
+											>
+												<Link href="/courses">
+													Show all courses
+												</Link>
+											</Button>
+										</div>
+									)}
 								</div>
 							</div>
 							<div className="col-span-3 lg:col-span-2">

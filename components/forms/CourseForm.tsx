@@ -64,11 +64,11 @@ export function CourseForm({ id, user }: { id: string; user: IUser }) {
 				});
 
 			toast({
-				title: "Course created!",
-				description: `You have successfully created ${res.code} - ${res.title}.`,
+				title: "Success!",
+				description: res?.message,
 			});
 
-			router.push(`/courses/${res._id}`);
+			router.push(`/courses/${res.course._id}`);
 		} catch (error) {
 			toast({
 				title: "Error!",
