@@ -48,6 +48,13 @@ const page = async ({ params: { id } }: { params: { id: string } }) => {
 							</Link>
 						</Button>
 					)}
+					{user?.identity === "lecturer" && (
+						<Button asChild className="w-full md:w-auto">
+							<Link href={`/documents/${course?._id}/new`}>
+								Add a document
+							</Link>
+						</Button>
+					)}
 				</CourseHeader>
 				<div className="grid grid-cols-2 lg:grid-cols-4 gap-4 my-6">
 					<AttendanceChart identity={user.identity} />

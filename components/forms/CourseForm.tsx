@@ -56,7 +56,7 @@ export function CourseForm({ id, user }: { id: string; user: IUser }) {
 
 			const res = await createNewCourse({ ...course });
 
-			if (res.status == 400)
+			if (res?.status == 400)
 				return toast({
 					title: "Error!",
 					description: res?.message,

@@ -37,6 +37,15 @@ export const getLecturerCourses = async ({
 			  }
 			: {};
 
+		const user = await User.findById(userId);
+
+		if (user.identity !== "lecturer")
+			return {
+				status: 400,
+				message:
+					"You are not authorized to access this information. Try again later.",
+			};
+
 		const skipAmount = (Number(page) - 1) * limit;
 
 		const courses = await Course.find({ ...keyword, user: userId })
@@ -175,12 +184,19 @@ export const createNewCourse = async ({
 	try {
 		await connectToDatabase();
 
-		const lecturer = await User.findById(userId);
-
-		if (!lecturer)
+		if (!title || !code || !unit)
 			return {
 				status: 400,
-				message: "Lecturer not found so try again later!",
+				message: "Please enter all fields.",
+			};
+
+		const user = await User.findById(userId);
+
+		if (user.identity !== "lecturer")
+			return {
+				status: 400,
+				message:
+					"You are not authorized to create a course. Try again later.",
 			};
 
 		const courseExist = await Course.findOne({ code });
@@ -201,7 +217,7 @@ export const createNewCourse = async ({
 		if (!course)
 			return {
 				status: 400,
-				message: `An error occurred! ${code} not created!`,
+				message: `An error occurred! ${code} not created. Try again later.`,
 			};
 
 		return {
@@ -324,10 +340,11 @@ export const addNewCourse = async ({
 
 		const user = await User.findById(userId);
 
-		if (!user)
+		if (user.identity !== "student")
 			return {
 				status: 400,
-				message: "User not found. An error occurred!",
+				message:
+					"You are not authorized to add a course. Try again later.",
 			};
 
 		const course = await Course.findById(courseId);
@@ -391,11 +408,11 @@ export const getStudents = async ({
 
 		const user = await User.findById(userId);
 
-		if (user.identity === "student")
+		if (user.identity !== "lecturer")
 			return {
 				status: 400,
 				message:
-					"You are not authorized to access this. Try again later",
+					"You are not authorized to access this information a course. Try again later.",
 			};
 
 		const students = await StudentCourse.find({ course: courseId })
