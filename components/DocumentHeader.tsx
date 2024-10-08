@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { EditDocumentTitleModal } from "./modals/EditDocumentTitleModal";
 
 interface DocumentHeaderProps {
 	firstName: string;
@@ -8,8 +9,11 @@ interface DocumentHeaderProps {
 	picture?: string;
 	children?: React.ReactNode;
 	courseTitle: string;
-	courseCode: string;
 	fileType: string;
+	courseCode: string;
+	identity?: string;
+	documentId: string;
+	userId: string;
 }
 
 const DocumentHeader = ({
@@ -22,6 +26,9 @@ const DocumentHeader = ({
 	courseTitle,
 	courseCode,
 	fileType,
+	identity = "student",
+	documentId,
+	userId,
 }: DocumentHeaderProps) => {
 	return (
 		<div className="flex items-center justify-between flex-col md:flex-row w-full gap-4">
@@ -38,8 +45,15 @@ const DocumentHeader = ({
 					className="rounded-md w-12 h-12 object-cover"
 				/>
 				<div className="flex items-start justify-center flex-col space-y-1">
-					<h3 className="font-bold text-base">
-						{title} - {courseTitle} - {courseCode}
+					<h3 className="font-bold text-base flex items-center gap-1">
+						{title} - {courseCode}{" "}
+						{identity === "lecturer" && (
+							<EditDocumentTitleModal
+								title={title!}
+								documentId={documentId}
+								userId={userId}
+							/>
+						)}
 					</h3>
 					<small className="text-xs text-gray-400 dark:text-gray-300">
 						{firstName} {lastName} - Lecturer of{" "}

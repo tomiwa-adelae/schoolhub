@@ -32,6 +32,9 @@ const page = async ({ params: { id } }: { params: { id: string } }) => {
 					title={document?.title}
 					courseCode={document?.course?.code}
 					fileType={fileType}
+					identity={user?.identity}
+					documentId={document?._id}
+					userId={user?._id}
 				>
 					{user.identity === "student" && (
 						<Button asChild className="w-full md:w-auto">

@@ -48,8 +48,6 @@ const page = async ({ searchParams }: SearchParamProps) => {
 		});
 	}
 
-	console.log(documents?.data[0].course);
-
 	if (documents?.status === 400)
 		return <NotFound message={documents?.message} />;
 

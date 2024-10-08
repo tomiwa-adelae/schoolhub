@@ -166,6 +166,7 @@ export const getStudentCourses = async ({
 		return {
 			data: JSON.parse(JSON.stringify(paginatedCourses)),
 			totalPages: Math.ceil(courseCount / limit),
+			allCourses: studentCourses.length,
 		};
 	} catch (error: any) {
 		return {
@@ -433,6 +434,62 @@ export const getStudents = async ({
 			message:
 				error?.message ||
 				"Oops! Couldn't find students! Try again later.",
+		};
+	}
+};
+
+// Edit course details by lecturer
+export const editCourseDetails = async ({
+	courseId,
+	userId,
+	title,
+	code,
+	unit,
+}: {
+	courseId: string;
+	userId: string;
+	title: string;
+	unit: string;
+	code: string;
+}) => {
+	try {
+		await connectToDatabase();
+
+		const user = await User.findById(userId);
+
+		if (user.identity !== "lecturer")
+			return {
+				status: 400,
+				message:
+					"You are not authorized to access this information a course. Try again later.",
+			};
+
+		const course = await Course.findById(courseId);
+
+		if (!course)
+			return {
+				status: 400,
+				message: "Course not found. An error occurred!",
+			};
+
+		course.title = title || course.title;
+		course.code = code || course.code;
+		course.unit = unit || course.unit;
+
+		await course.save();
+
+		revalidatePath(`/courses/${courseId}`);
+		revalidatePath(`/courses`);
+		revalidatePath(`/dashboard`);
+
+		return { message: `You have successfully edited the course.` };
+	} catch (error: any) {
+		handleError(error);
+		return {
+			status: error?.status || 400,
+			message:
+				error?.message ||
+				"Oops! Couldn't edit course details! Try again later.",
 		};
 	}
 };

@@ -72,3 +72,9 @@ export const CourseFormSchema = z.object({
 		message: "Course unit is required!",
 	}),
 });
+
+export const DocumentSchema = z.object({
+	title: z.string().min(2, {
+		message: "Title must be at least 2 characters.",
+	}),
+});

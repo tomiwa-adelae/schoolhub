@@ -20,12 +20,7 @@ import { FileUpload } from "@/components/ui/file-upload";
 import { useState } from "react";
 import { createDocument } from "@/lib/actions/document.actions";
 import { useRouter } from "next/navigation";
-
-const FormSchema = z.object({
-	title: z.string().min(2, {
-		message: "Title must be at least 2 characters.",
-	}),
-});
+import { DocumentSchema } from "@/lib/validation";
 
 export function DocumentForm({
 	userId,
@@ -51,14 +46,14 @@ export function DocumentForm({
 		};
 	};
 
-	const form = useForm<z.infer<typeof FormSchema>>({
-		resolver: zodResolver(FormSchema),
+	const form = useForm<z.infer<typeof DocumentSchema>>({
+		resolver: zodResolver(DocumentSchema),
 		defaultValues: {
 			title: "",
 		},
 	});
 
-	async function onSubmit(data: z.infer<typeof FormSchema>) {
+	async function onSubmit(data: z.infer<typeof DocumentSchema>) {
 		if (!document)
 			return toast({
 				title: "Error!",

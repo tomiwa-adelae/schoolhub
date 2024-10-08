@@ -55,10 +55,17 @@ export const createDocument = async ({
 				message: "Please enter all fields",
 			};
 
-		const result = await cloudinary.uploader.upload(document, {
-			folder: "schoolhub",
-			resource_type: "raw",
-		});
+		let result;
+		if (document.startsWith("data:application/pdf")) {
+			result = await cloudinary.uploader.upload(document, {
+				folder: "schoolhub",
+			});
+		} else {
+			result = await cloudinary.uploader.upload(document, {
+				folder: "schoolhub",
+				resource_type: "raw",
+			});
+		}
 
 		if (!result)
 			return {
@@ -155,6 +162,15 @@ export const getLecturerDocuments = async ({
 	try {
 		await connectToDatabase();
 
+		const user = await User.findById(userId);
+
+		if (user.identity !== "lecturer")
+			return {
+				status: 400,
+				message:
+					"You are not authorized to create a document. Try again later.",
+			};
+
 		const skipAmount = (Number(page) - 1) * limit;
 
 		const documents = await Document.find({ user: userId })
@@ -211,6 +227,15 @@ export const deleteDocumentById = async ({
 	try {
 		await connectToDatabase();
 
+		const user = await User.findById(userId);
+
+		if (user.identity !== "lecturer")
+			return {
+				status: 400,
+				message:
+					"You are not authorized to create a document. Try again later.",
+			};
+
 		const document = await Document.findOne({
 			user: userId,
 			_id: documentId,
@@ -222,10 +247,16 @@ export const deleteDocumentById = async ({
 				message: "Oops! Document does not exist! Try again later.",
 			};
 
-		// Delete document from cloudinary
-		const result = await cloudinary.uploader.destroy(document.documentId, {
-			resource_type: "raw",
-		});
+		let result;
+		if (document.document.endsWith(".pdf")) {
+			// Delete document from cloudinary
+			result = await cloudinary.uploader.destroy(document.documentId, {});
+		} else {
+			// Delete document from cloudinary
+			result = await cloudinary.uploader.destroy(document.documentId, {
+				resource_type: "raw",
+			});
+		}
 
 		if (result.result !== "ok")
 			return {
@@ -279,8 +310,6 @@ export const getStudentDocuments = async ({
 
 		const courseIds = courses.map((course) => course.course);
 
-		console.log(courseIds);
-
 		const documents = await Document.find({
 			course: { $in: courseIds },
 		})
@@ -328,6 +357,57 @@ export const getStudentDocuments = async ({
 			message:
 				error?.message ||
 				"Oops! Couldn't get documents! Try again later.",
+		};
+	}
+};
+
+// Edit document title by lecturer
+export const editDocumentTitle = async ({
+	userId,
+	documentId,
+	title,
+}: {
+	userId: string;
+	documentId: string;
+	title: string;
+}) => {
+	try {
+		await connectToDatabase();
+
+		const user = await User.findById(userId);
+
+		if (user.identity !== "lecturer")
+			return {
+				status: 400,
+				message:
+					"You are not authorized to create a document. Try again later.",
+			};
+
+		const document = await Document.findById(documentId);
+
+		if (!document)
+			return {
+				status: 400,
+				message: "Oops! Document does not exist! Try again later.",
+			};
+
+		document.title = title || document.title;
+
+		console.log(title);
+
+		await document.save();
+
+		revalidatePath(`/documents/${documentId}`);
+		revalidatePath(`/documents`);
+		revalidatePath(`/dashboard`);
+
+		return { message: `You have successfully edited the document title.` };
+	} catch (error: any) {
+		return {
+			status: error?.status || 400,
+			message:
+				error?.message ||
+				"Oops! Couldn't edit document! Try again later.",
 		};
 	}
 };
