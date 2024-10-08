@@ -40,6 +40,9 @@ const page = async ({ params: { id } }: { params: { id: string } }) => {
 					courseTitle={course?.title}
 					courseUnit={course?.unit}
 					courseCode={course?.code}
+					courseId={course?._id}
+					userId={user?._id}
+					identity={user?.identity}
 				/>
 				<div className="my-6">
 					<h3 className="font-bold text-lg mb-4">
