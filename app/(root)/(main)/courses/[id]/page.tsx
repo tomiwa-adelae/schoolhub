@@ -6,6 +6,7 @@ import NotFound from "@/components/shared/NotFound";
 import TopNavbar from "@/components/shared/TopNavbar";
 import { Button } from "@/components/ui/button";
 import { getCourseById, getStudents } from "@/lib/actions/course.actions";
+import { getDocuments } from "@/lib/actions/document.actions";
 import { getUserById } from "@/lib/actions/user.actions";
 import { IUser } from "@/lib/database/models/user.model";
 import { auth } from "@clerk/nextjs";
@@ -18,6 +19,8 @@ const page = async ({ params: { id } }: { params: { id: string } }) => {
 	const user: IUser = await getUserById(userId!);
 
 	const course = await getCourseById(id!);
+
+	const documents = await getDocuments(id);
 
 	let students;
 
@@ -97,7 +100,7 @@ const page = async ({ params: { id } }: { params: { id: string } }) => {
 								alt={"QRCode"}
 								width={1000}
 								height={1000}
-								className="w-auto h-auto object-cover"
+								className="w-auto h-auto object-cover dark:invert"
 							/>
 							<h3 className="font-bold text-base">
 								Generate QR Code
@@ -112,22 +115,35 @@ const page = async ({ params: { id } }: { params: { id: string } }) => {
 								Documents
 							</h3>
 							<div className="grid grid-cols-1 gap-4">
-								<Document />
-								<Document />
-								<Document />
-								<Document />
-								<Document />
+								{documents?.map((document: DocumentProps) => (
+									<Document
+										key={document?._id}
+										document={document.document}
+										title={document?.title}
+										code={document?.course.code}
+										_id={document?._id}
+										createdAt={document?.createdAt}
+									/>
+								))}
 							</div>
-							{/* <p className="text-sm italic text-center mb-4">
-									You have no document yet.
-                                    </p> */}
-							<div className="text-center mt-4">
-								<Button size={"sm"} asChild variant={"ghost"}>
-									<Link href="/courses">
-										Show all documents
-									</Link>
-								</Button>
-							</div>
+							{documents?.length === 0 && (
+								<p className="text-sm italic text-center mb-4">
+									This course has no document.
+								</p>
+							)}
+							{documents?.length >= 5 && (
+								<div className="text-center mt-4">
+									<Button
+										size={"sm"}
+										asChild
+										variant={"ghost"}
+									>
+										<Link href="/courses">
+											Show all documents
+										</Link>
+									</Button>
+								</div>
+							)}
 						</div>
 					</div>
 					<div>

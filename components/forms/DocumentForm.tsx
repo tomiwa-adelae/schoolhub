@@ -74,8 +74,6 @@ export function DocumentForm({
 				courseId,
 			});
 
-			console.log(res);
-
 			if (res?.status == 400)
 				return toast({
 					title: "Error!",
@@ -90,7 +88,6 @@ export function DocumentForm({
 
 			router.push(`/documents/${res?.document._id}`);
 		} catch (error) {
-			console.log(error);
 			toast({
 				title: "Error!",
 				description: "An error occurred!",

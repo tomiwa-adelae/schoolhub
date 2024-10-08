@@ -54,7 +54,6 @@ declare interface GetStudentCoursesProps {
 	page: number;
 	userId: string;
 }
-
 declare interface getAvailableCoursesProps {
 	query: string;
 	limit: number;
@@ -95,4 +94,37 @@ declare interface CourseProps {
 			identity: string;
 		};
 	};
+}
+
+declare interface DocumentProps {
+	_id: string;
+	document: string;
+	title: string;
+	createdAt: string;
+	course: {
+		_id: string;
+		title: string;
+		code: string;
+		unit: string;
+		createdAt: string;
+		user: {
+			firstName: string;
+			lastName: string;
+			email: string;
+		};
+	};
+}
+
+declare interface GetLecturerDocumentProps {
+	query: string;
+	limit: number;
+	page: number;
+	userId: string;
+}
+
+declare interface GetStudentDocumentProps {
+	query: string;
+	limit: number;
+	page: number;
+	userId: string;
 }

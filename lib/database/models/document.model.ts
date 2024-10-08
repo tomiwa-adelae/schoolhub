@@ -29,6 +29,10 @@ const documentSchema = new Schema(
 			type: String,
 			required: true,
 		},
+		documentId: {
+			type: String,
+			required: true,
+		},
 	},
 	{ timestamps: true }
 );

@@ -54,6 +54,8 @@ export const getLecturerCourses = async ({
 			.skip(skipAmount)
 			.limit(limit);
 
+		const allCourses = await Course.find({ user: userId });
+
 		const courseCount = await Course.countDocuments({
 			...keyword,
 			user: userId,
@@ -77,6 +79,7 @@ export const getLecturerCourses = async ({
 		return {
 			data: JSON.parse(JSON.stringify(coursesWithStudentCount)),
 			totalPages: Math.ceil(courseCount / limit),
+			allCourses: allCourses.length,
 		};
 	} catch (error: any) {
 		handleError(error);

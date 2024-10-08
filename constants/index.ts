@@ -87,3 +87,4 @@ export const navLinks = [
 ];
 
 export const COURSES_LIMITS = 2;
+export const DOCUMENT_LIMITS = 2;

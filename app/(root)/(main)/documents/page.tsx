@@ -14,44 +14,44 @@ import Pagination from "@/components/Pagination";
 import Image from "next/image";
 import TopNavbar from "@/components/shared/TopNavbar";
 import SearchBar from "@/components/SearchBar";
+import {
+	getLecturerDocuments,
+	getStudentDocuments,
+} from "@/lib/actions/document.actions";
+import Link from "next/link";
+import { DOCUMENT_LIMITS } from "@/constants";
+import NotFound from "@/components/shared/NotFound";
 
-const documents = [
-	{
-		name: "Time Dependent equation",
-		courseName: "Quantum Mechanics II",
-		courseCode: "PHY4202",
-		lecturer: "Mr. A.M. Lasisi",
-	},
-	{
-		name: "Grad, Curl and Div",
-		courseName: "Vector and Tensor Analysis",
-		courseCode: "PHY4278",
-		lecturer: "Dr. C. Ogunkoya",
-	},
-	{
-		name: "Time Independent equation",
-		courseName: "Quantum Mechanics II",
-		courseCode: "PHY4202",
-		lecturer: "Mr. A.M. Lasisi",
-	},
-	{
-		name: "Radiation",
-		courseName: "Atomic and Nuclear Physics",
-		courseCode: "PHY4222",
-		lecturer: "Mr. M. Olatunji",
-	},
-	{
-		name: "Hybrid solar generation",
-		courseName: "Project research",
-		courseCode: "PHY4297",
-		lecturer: "Dr. E.J. Oluwadare",
-	},
-];
+const page = async ({ searchParams }: SearchParamProps) => {
+	const page = Number(searchParams?.page) || 1;
+	const query = (searchParams?.query as string) || "";
 
-const page = async () => {
 	const { userId } = auth();
 
 	const user = await getUserById(userId!);
+
+	let documents;
+
+	if (user?.identity === "lecturer") {
+		documents = await getLecturerDocuments({
+			userId: user?._id,
+			page,
+			query,
+			limit: DOCUMENT_LIMITS,
+		});
+	} else if (user?.identity === "student") {
+		documents = await getStudentDocuments({
+			page,
+			query,
+			limit: DOCUMENT_LIMITS,
+			userId: user?._id,
+		});
+	}
+
+	console.log(documents?.data[0].course);
+
+	if (documents?.status === 400)
+		return <NotFound message={documents?.message} />;
 
 	return (
 		<main>
@@ -80,34 +80,58 @@ const page = async () => {
 							</TableRow>
 						</TableHeader>
 						<TableBody>
-							{documents.map((document, index) => (
-								<TableRow key={index}>
-									<TableCell className="font-medium">
-										<div className="flex items-start md:items-center justify-start flex-col md:flex-row">
-											<Image
-												src={"/assets/icons/word.svg"}
-												alt="Word file"
-												width={1000}
-												height={1000}
-												className="w-6 h-6 object-cover mr-2"
-											/>
-											{document.name}
-										</div>
-									</TableCell>
-									<TableCell>{document.courseName}</TableCell>
-									<TableCell>{document.courseCode}</TableCell>
-									<TableCell className="text-right">
-										{document.lecturer}
-									</TableCell>
-								</TableRow>
-							))}
+							{documents?.data.map((document: DocumentProps) => {
+								const fileType = document?.document
+									?.split(".")
+									.pop();
+								return (
+									<TableRow key={document?._id}>
+										<TableCell className="font-medium">
+											<Link
+												href={`/documents/${document?._id}`}
+												className="flex items-start md:items-center justify-start flex-col md:flex-row"
+											>
+												<Image
+													src={
+														fileType === "pdf"
+															? "/assets/icons/pdf.svg"
+															: "/assets/icons/word.svg"
+													}
+													alt={`${document?.title} file type is - ${fileType}`}
+													width={1000}
+													height={1000}
+													className="w-6 h-6 object-cover mr-2"
+												/>
+												{document.title}
+											</Link>
+										</TableCell>
+										<TableCell>
+											{document.course.title}
+										</TableCell>
+										<TableCell>
+											{document?.course.code}
+										</TableCell>
+										<TableCell className="text-right">
+											{document.course.user.firstName}{" "}
+											{document?.course.user.lastName}
+										</TableCell>
+									</TableRow>
+								);
+							})}
 						</TableBody>
 					</Table>
-					{/* <p className="text-sm italic text-center mt-4">
-						You have no document yet.
-					</p> */}
+					{documents?.data.length === 0 && (
+						<p className="text-sm italic text-center mt-4">
+							You have no document yet.
+						</p>
+					)}
 				</div>
-				<Pagination />
+				{documents?.totalPages! > 1 && (
+					<Pagination
+						totalPages={documents?.totalPages}
+						page={page}
+					/>
+				)}
 			</div>
 		</main>
 	);

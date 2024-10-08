@@ -6,11 +6,15 @@ import PageHeader from "@/components/PageHeader";
 import TopNavbar from "@/components/shared/TopNavbar";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { COURSES_LIMITS } from "@/constants";
+import { COURSES_LIMITS, DOCUMENT_LIMITS } from "@/constants";
 import {
 	getLecturerCourses,
 	getStudentCourses,
 } from "@/lib/actions/course.actions";
+import {
+	getLecturerDocuments,
+	getStudentDocuments,
+} from "@/lib/actions/document.actions";
 import { getUserById } from "@/lib/actions/user.actions";
 import { auth } from "@clerk/nextjs";
 import { FilePlus, Plus } from "lucide-react";
@@ -25,7 +29,7 @@ const page = async ({ searchParams }: SearchParamProps) => {
 
 	const user = await getUserById(userId!);
 
-	let courses;
+	let courses: any;
 
 	if (user?.identity === "lecturer") {
 		courses = await getLecturerCourses({
@@ -39,6 +43,24 @@ const page = async ({ searchParams }: SearchParamProps) => {
 			page,
 			query,
 			limit: COURSES_LIMITS,
+			userId: user?._id,
+		});
+	}
+
+	let documents;
+
+	if (user?.identity === "lecturer") {
+		documents = await getLecturerDocuments({
+			userId: user?._id,
+			page,
+			query,
+			limit: DOCUMENT_LIMITS,
+		});
+	} else if (user?.identity === "student") {
+		documents = await getStudentDocuments({
+			page,
+			query,
+			limit: DOCUMENT_LIMITS,
 			userId: user?._id,
 		});
 	}
@@ -165,15 +187,26 @@ const page = async ({ searchParams }: SearchParamProps) => {
 										My documents
 									</h3>
 									<div className="grid grid-cols-1 gap-4">
-										<Document />
-										<Document />
-										<Document />
-										<Document />
-										<Document />
+										{documents?.data.map(
+											(document: DocumentProps) => (
+												<Document
+													key={document._id}
+													_id={document?._id}
+													code={document.course.code}
+													createdAt={
+														document.createdAt
+													}
+													document={document.document}
+													title={document.title}
+												/>
+											)
+										)}
 									</div>
-									{/* <p className="text-sm italic text-center mb-4">
-									You have no document yet.
-								</p> */}
+									{documents?.data.length === 0 && (
+										<p className="text-sm italic text-center mb-4">
+											You have no document yet.
+										</p>
+									)}
 								</div>
 								<div className="grid grid-cols-2 gap-4 mt-4">
 									<div className="border-2 border-dashed border-gray-400 rounded-md flex flex-col items-center justify-center gap-3 text-center p-4">
@@ -185,7 +218,7 @@ const page = async ({ searchParams }: SearchParamProps) => {
 											className="w-8 h-8 object-cover"
 										/>
 										<h3 className="font-bold text-base">
-											9
+											{courses?.allCourses}
 										</h3>
 										<p className="text-xs text-gray-400">
 											Total courses

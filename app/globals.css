@@ -89,3 +89,23 @@
 		background-color: darken(#9ca3af, 10%);
 	}
 }
+.docx-container {
+	width: 100%;
+	max-width: 100%;
+	overflow-x: auto; /* Allow horizontal scroll if content is too wide */
+	padding: 20px;
+	border: 1px solid #ddd;
+	box-sizing: border-box;
+}
+
+.docx-container * {
+	max-width: 100%;
+	word-wrap: break-word; /* Prevent long words from breaking the layout */
+}
+
+.docx-container img,
+.docx-container table {
+	width: 100%; /* Make images and tables responsive */
+	height: auto;
+	display: block;
+}
