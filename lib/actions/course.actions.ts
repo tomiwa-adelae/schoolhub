@@ -33,6 +33,12 @@ export const getLecturerCourses = async ({
 								$options: "i",
 							},
 						},
+						{
+							unit: {
+								$regex: query,
+								$options: "i",
+							},
+						},
 					],
 			  }
 			: {};
@@ -224,6 +230,8 @@ export const createNewCourse = async ({
 				message: `An error occurred! ${code} not created. Try again later.`,
 			};
 
+		revalidatePath("/courses/new");
+
 		return {
 			course: JSON.parse(JSON.stringify(course)),
 			message: `You have successfully created ${course.code} - ${course.title}.`,
@@ -264,6 +272,7 @@ export const getCourseById = async (id: string) => {
 };
 
 // Get all courses by students
+// Get all courses by students
 export const getAvailableCourses = async ({
 	query,
 	limit = COURSES_LIMITS,
@@ -273,59 +282,84 @@ export const getAvailableCourses = async ({
 	try {
 		await connectToDatabase();
 
+		// Find all courses already taken by the student
 		const studentCourses = await StudentCourse.find({
 			user: userId,
 		}).select("course");
 
 		const takenCourseIds = studentCourses.map((sc) => sc.course);
 
-		const keyword = query
-			? {
-					$or: [
-						{
-							title: {
-								$regex: query,
-								$options: "i",
-							},
-						},
-						{
-							code: {
-								$regex: query,
-								$options: "i",
-							},
-						},
-					],
-			  }
-			: {};
-
+		// Pagination calculations
 		const skipAmount = (Number(page) - 1) * limit;
 
+		// Get total count of available courses for the student (before applying pagination)
+		const totalCourseCount = await Course.countDocuments({
+			_id: { $nin: takenCourseIds },
+		});
+
+		// Fetch courses for the current page
 		const availableCourses = await Course.find({
-			...keyword,
 			_id: { $nin: takenCourseIds },
 		})
 			.populate("user")
 			.sort({ createdAt: -1 })
-			.skip(skipAmount)
-			.limit(limit);
+			.skip(skipAmount) // Skip based on the current page
+			.limit(limit); // Limit based on pagination size
 
-		const totalCourses = await Course.countDocuments({
-			...keyword,
-			_id: { $nin: takenCourseIds },
+		// Filter courses based on the query (search criteria)
+		const filteredCourses = availableCourses.filter((availableCourse) => {
+			if (!availableCourse) return false;
+
+			const matchesTitle = availableCourse.title
+				?.toLowerCase()
+				.includes(query.toLowerCase());
+			const matchesCode = availableCourse.code
+				?.toLowerCase()
+				.includes(query.toLowerCase());
+			const matchesUnit = availableCourse.unit
+				?.toLowerCase()
+				.includes(query.toLowerCase());
+			const matchesLecturerFirstName = availableCourse.user.firstName
+				?.toLowerCase()
+				.includes(query.toLowerCase());
+			const matchesLecturerLastName = availableCourse.user.lastName
+				?.toLowerCase()
+				.includes(query.toLowerCase());
+			const matchesLecturerEmail = availableCourse.user.email
+				?.toLowerCase()
+				.includes(query.toLowerCase());
+			const matchesLecturerDepartment = availableCourse.user.department
+				?.toLowerCase()
+				.includes(query.toLowerCase());
+			const matchesLecturerFaculty = availableCourse.user.faculty
+				?.toLowerCase()
+				.includes(query.toLowerCase());
+			const matchesLecturerPhoneNumber = availableCourse.user.phoneNumber
+				?.toLowerCase()
+				.includes(query.toLowerCase());
+
+			return (
+				matchesTitle ||
+				matchesCode ||
+				matchesUnit ||
+				matchesLecturerFirstName ||
+				matchesLecturerLastName ||
+				matchesLecturerEmail ||
+				matchesLecturerDepartment ||
+				matchesLecturerFaculty ||
+				matchesLecturerPhoneNumber
+			);
 		});
 
+		// Calculate total pages based on totalCourseCount
+		const totalPages = Math.ceil(totalCourseCount / limit);
+
 		return {
-			data: JSON.parse(JSON.stringify(availableCourses)),
-			totalPages: Math.ceil(totalCourses / limit),
+			data: JSON.parse(JSON.stringify(filteredCourses)),
+			totalPages: totalPages, // Total number of pages
 		};
-	} catch (error: any) {
-		handleError(error);
-		return {
-			status: error?.status || 400,
-			message:
-				error?.message ||
-				"Oops! Couldn't get courses! Try again later.",
-		};
+	} catch (error) {
+		throw new Error("Error fetching available courses");
 	}
 };
 
@@ -461,7 +495,7 @@ export const editCourseDetails = async ({
 			return {
 				status: 400,
 				message:
-					"You are not authorized to access this information a course. Try again later.",
+					"You are not authorized to edit this course details. Try again later.",
 			};
 
 		const course = await Course.findById(courseId);

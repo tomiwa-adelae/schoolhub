@@ -6,6 +6,7 @@ import PageHeader from "@/components/PageHeader";
 import TopNavbar from "@/components/shared/TopNavbar";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
+import User from "@/components/User";
 import { COURSES_LIMITS, DOCUMENT_LIMITS } from "@/constants";
 import {
 	getLecturerCourses,
@@ -15,7 +16,7 @@ import {
 	getLecturerDocuments,
 	getStudentDocuments,
 } from "@/lib/actions/document.actions";
-import { getUserById } from "@/lib/actions/user.actions";
+import { getMyStudents, getUserById } from "@/lib/actions/user.actions";
 import { auth } from "@clerk/nextjs";
 import { FilePlus, Plus } from "lucide-react";
 import Image from "next/image";
@@ -64,6 +65,8 @@ const page = async ({ searchParams }: SearchParamProps) => {
 			userId: user?._id,
 		});
 	}
+
+	const students = await getMyStudents({ userId: user?._id });
 
 	return (
 		<main>
@@ -250,17 +253,62 @@ const page = async ({ searchParams }: SearchParamProps) => {
 							<div className="col-span-2">
 								<div className="border-2 border-dashed rounded-md p-4 border-gray-400">
 									<h3 className="font-bold text-lg mb-4">
-										My colleagues
+										{user?.identity === "student"
+											? "My colleagues"
+											: "My students"}
 									</h3>
 									<div className="grid grid-cols-1 gap-4">
-										<Colleague />
-										<Colleague />
-										<Colleague />
-										<Colleague />
+										{user?.identity === "student"
+											? "Tomiwa"
+											: students?.map(
+													(student: {
+														user: {
+															_id: string;
+															email: string;
+															firstName: string;
+															lastName: string;
+															picture: string;
+														};
+													}) => (
+														<User
+															key={
+																student.user._id
+															}
+															firstName={
+																student.user
+																	.firstName
+															}
+															lastName={
+																student.user
+																	.lastName
+															}
+															email={
+																student.user
+																	.email
+															}
+															picture={
+																student.user
+																	.picture
+															}
+															id={
+																student.user._id
+															}
+														/>
+													)
+											  )}
 									</div>
-									{/* <p className="text-sm italic text-center mb-4">
-									You have no colleagues yet.
-									</p> */}
+									{user?.identity === "student" ? (
+										<p className="text-sm italic text-center mb-4">
+											You have no colleagues yet.
+										</p>
+									) : (
+										students.length === 0 && (
+											<p className="text-sm italic text-center mb-4">
+												You have no student.
+											</p>
+										)
+									)}
+
 									<div className="text-center mt-4">
 										<Button
 											size={"sm"}
@@ -280,11 +328,8 @@ const page = async ({ searchParams }: SearchParamProps) => {
 										My lecturers
 									</h3>
 									<div className="grid grid-cols-1 gap-4">
-										<Lecturer />
-										<Lecturer />
-										<Lecturer />
-										<Lecturer />
-										<Lecturer />
+										<User />
+										<User />
 									</div>
 									<p className="text-sm italic text-center mb-4">
 										You have no lecturers yet.

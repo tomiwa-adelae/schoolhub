@@ -168,7 +168,7 @@ export const getLecturerDocuments = async ({
 			return {
 				status: 400,
 				message:
-					"You are not authorized to create a document. Try again later.",
+					"You are not authorized to access this documents. Try again later.",
 			};
 
 		const skipAmount = (Number(page) - 1) * limit;
@@ -233,7 +233,7 @@ export const deleteDocumentById = async ({
 			return {
 				status: 400,
 				message:
-					"You are not authorized to create a document. Try again later.",
+					"You are not authorized to delete this document. Try again later.",
 			};
 
 		const document = await Document.findOne({
@@ -380,7 +380,7 @@ export const editDocumentTitle = async ({
 			return {
 				status: 400,
 				message:
-					"You are not authorized to create a document. Try again later.",
+					"You are not authorized to edit this document. Try again later.",
 			};
 
 		const document = await Document.findById(documentId);

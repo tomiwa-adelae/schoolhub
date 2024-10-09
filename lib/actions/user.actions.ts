@@ -1,5 +1,7 @@
 "use server";
 import { connectToDatabase } from "../database";
+import Course from "../database/models/course.model";
+import StudentCourse from "../database/models/student.course.model";
 import User from "../database/models/user.model";
 import { handleError } from "../utils";
 
@@ -214,6 +216,46 @@ export const updateBoardingLecturerDetails = async (
 				message: "You have successfully updated your profile.",
 			})
 		);
+	} catch (error: any) {
+		handleError(error);
+		return {
+			status: error?.status || 400,
+			message:
+				error?.message ||
+				"Oops! Couldn't update your profile! Try again later.",
+		};
+	}
+};
+
+// Get all the lecturer's students
+export const getMyStudents = async ({ userId }: { userId: string }) => {
+	try {
+		await connectToDatabase();
+
+		const user = await User.findById(userId);
+
+		if (user.identity !== "lecturer")
+			return {
+				status: 400,
+				message:
+					"You are not authorized to access this information. Try again later.",
+			};
+
+		const courses = await Course.find({ user: userId }).select("_id");
+
+		if (!courses || courses.length === 0)
+			return {
+				status: 400,
+				message: "Nothing was found! Try again later",
+			};
+
+		const courseIds = courses.map((course) => course._id);
+
+		const students = await StudentCourse.find({
+			course: { $in: courseIds },
+		}).populate("user");
+
+		return JSON.parse(JSON.stringify(students));
 	} catch (error: any) {
 		handleError(error);
 		return {
