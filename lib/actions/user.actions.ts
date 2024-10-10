@@ -241,7 +241,9 @@ export const getMyStudents = async ({ userId }: { userId: string }) => {
 					"You are not authorized to access this information. Try again later.",
 			};
 
-		const courses = await Course.find({ user: userId }).select("_id");
+		const courses = await Course.find({ user: userId })
+			.select("_id")
+			.sort({ createdAt: -1 });
 
 		if (!courses || courses.length === 0)
 			return {
@@ -253,7 +255,9 @@ export const getMyStudents = async ({ userId }: { userId: string }) => {
 
 		const students = await StudentCourse.find({
 			course: { $in: courseIds },
-		}).populate("user");
+		})
+			.populate("user")
+			.sort({ createdAt: -1 });
 
 		return JSON.parse(JSON.stringify(students));
 	} catch (error: any) {
@@ -262,7 +266,76 @@ export const getMyStudents = async ({ userId }: { userId: string }) => {
 			status: error?.status || 400,
 			message:
 				error?.message ||
-				"Oops! Couldn't update your profile! Try again later.",
+				"Oops! Couldn't get the students! Try again later.",
+		};
+	}
+};
+
+// Get all lecturers of a particular student
+export const getMyLecturers = async ({ userId }: { userId: string }) => {
+	try {
+		await connectToDatabase();
+
+		const user = await User.findById(userId);
+
+		if (user.identity !== "student")
+			return {
+				status: 400,
+				message:
+					"You are not authorized to access this information. Try again later.",
+			};
+
+		const courses = await StudentCourse.find({ user: userId })
+			.sort({ createdAt: -1 })
+			.populate({
+				path: "course",
+				populate: {
+					path: "user",
+				},
+			})
+			.exec();
+		const lecturers = courses.map((course: any) => course.course.user);
+
+		return JSON.parse(JSON.stringify(lecturers));
+	} catch (error: any) {
+		handleError(error);
+		return {
+			status: error?.status || 400,
+			message:
+				error?.message ||
+				"Oops! Couldn't get the lecturers! Try again later.",
+		};
+	}
+};
+
+// Get all colleagues of a particular student
+export const getMyColleagues = async ({ userId }: { userId: string }) => {
+	try {
+		await connectToDatabase();
+
+		const user = await User.findById(userId);
+
+		if (user.identity !== "student")
+			return {
+				status: 400,
+				message:
+					"You are not authorized to access this information. Try again later.",
+			};
+
+		const colleagues = await User.find({
+			department: user.department,
+			identity: "student",
+			_id: { $ne: userId },
+		}).sort({ createdAt: -1 });
+
+		return JSON.parse(JSON.stringify(colleagues));
+	} catch (error: any) {
+		handleError(error);
+		return {
+			status: error?.status || 400,
+			message:
+				error?.message ||
+				"Oops! Couldn't get the colleagues! Try again later.",
 		};
 	}
 };

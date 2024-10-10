@@ -1,7 +1,5 @@
-import Colleague from "@/components/Colleague";
 import Course from "@/components/Course";
 import Document from "@/components/Document";
-import Lecturer from "@/components/Lecturer";
 import PageHeader from "@/components/PageHeader";
 import TopNavbar from "@/components/shared/TopNavbar";
 import { Button } from "@/components/ui/button";
@@ -16,7 +14,12 @@ import {
 	getLecturerDocuments,
 	getStudentDocuments,
 } from "@/lib/actions/document.actions";
-import { getMyStudents, getUserById } from "@/lib/actions/user.actions";
+import {
+	getMyColleagues,
+	getMyLecturers,
+	getMyStudents,
+	getUserById,
+} from "@/lib/actions/user.actions";
 import { auth } from "@clerk/nextjs";
 import { FilePlus, Plus } from "lucide-react";
 import Image from "next/image";
@@ -67,6 +70,15 @@ const page = async ({ searchParams }: SearchParamProps) => {
 	}
 
 	const students = await getMyStudents({ userId: user?._id });
+
+	let lecturers;
+	let colleagues;
+
+	if (user?.identity === "student") {
+		lecturers = await getMyLecturers({ userId: user?._id });
+
+		colleagues = await getMyColleagues({ userId: user?._id });
+	}
 
 	return (
 		<main>
@@ -258,46 +270,70 @@ const page = async ({ searchParams }: SearchParamProps) => {
 											: "My students"}
 									</h3>
 									<div className="grid grid-cols-1 gap-4">
-										{user?.identity === "student"
-											? "Tomiwa"
-											: students?.map(
-													(student: {
-														user: {
-															_id: string;
-															email: string;
-															firstName: string;
-															lastName: string;
-															picture: string;
-														};
+										{user?.identity === "student" ? (
+											<>
+												{colleagues?.map(
+													(colleague: {
+														_id: string;
+														email: string;
+														firstName: string;
+														lastName: string;
+														picture: string;
 													}) => (
 														<User
-															key={
-																student.user._id
-															}
+															key={colleague._id}
 															firstName={
-																student.user
-																	.firstName
+																colleague.firstName
 															}
 															lastName={
-																student.user
-																	.lastName
+																colleague.lastName
 															}
 															email={
-																student.user
-																	.email
+																colleague.email
 															}
 															picture={
-																student.user
-																	.picture
+																colleague.picture
 															}
-															id={
-																student.user._id
-															}
+															id={colleague._id}
 														/>
 													)
-											  )}
+												)}
+											</>
+										) : (
+											students?.map(
+												(student: {
+													user: {
+														_id: string;
+														email: string;
+														firstName: string;
+														lastName: string;
+														picture: string;
+													};
+												}) => (
+													<User
+														key={student.user._id}
+														firstName={
+															student.user
+																.firstName
+														}
+														lastName={
+															student.user
+																.lastName
+														}
+														email={
+															student.user.email
+														}
+														picture={
+															student.user.picture
+														}
+														id={student.user._id}
+													/>
+												)
+											)
+										)}
 									</div>
-									{user?.identity === "student" ? (
+									{user?.identity === "student" &&
+									colleagues.length === 0 ? (
 										<p className="text-sm italic text-center mb-4">
 											You have no colleagues yet.
 										</p>
@@ -309,31 +345,71 @@ const page = async ({ searchParams }: SearchParamProps) => {
 										)
 									)}
 
-									<div className="text-center mt-4">
-										<Button
-											size={"sm"}
-											asChild
-											variant={"ghost"}
-										>
-											<Link href="/courses">
-												Show all colleagues
-											</Link>
-										</Button>
-									</div>
+									{user?.identity === "student" &&
+										colleagues.length !== 0 &&
+										colleagues.length > 5 && (
+											<div className="text-center mt-4">
+												<Button
+													size={"sm"}
+													asChild
+													variant={"ghost"}
+												>
+													<Link href="/courses">
+														Show all colleagues
+													</Link>
+												</Button>
+											</div>
+										)}
+
+									{user?.identity === "lecturer" &&
+										students.length !== 0 &&
+										students.length > 5 && (
+											<div className="text-center mt-4">
+												<Button
+													size={"sm"}
+													asChild
+													variant={"ghost"}
+												>
+													<Link href="/courses">
+														Show all students
+													</Link>
+												</Button>
+											</div>
+										)}
 								</div>
 							</div>
 							<div className="col-span-2 lg:col-span-3">
 								<div className="border-2 border-dashed rounded-md p-4 border-gray-400">
 									<h3 className="font-bold text-lg mb-4">
-										My lecturers
+										My lecturer
 									</h3>
 									<div className="grid grid-cols-1 gap-4">
-										<User />
-										<User />
+										{lecturers?.map(
+											(lecturer: {
+												_id: string;
+												email: string;
+												firstName: string;
+												lastName: string;
+												picture: string;
+											}) => (
+												<User
+													key={lecturer._id}
+													firstName={
+														lecturer.firstName
+													}
+													lastName={lecturer.lastName}
+													email={lecturer.email}
+													picture={lecturer.picture}
+													id={lecturer._id}
+												/>
+											)
+										)}
 									</div>
-									<p className="text-sm italic text-center mb-4">
-										You have no lecturers yet.
-									</p>
+									{lecturers?.length === 0 && (
+										<p className="text-sm italic text-center mb-4">
+											You have no lecturers yet.
+										</p>
+									)}
 									<div className="text-center mt-4">
 										<Button
 											size={"sm"}
