@@ -158,7 +158,7 @@ const page = async ({ params: { id } }: { params: { id: string } }) => {
 							<h3 className="font-bold text-lg mb-4">
 								Attendances
 							</h3>
-							<div className="grid grid-cols-1 gap-4">
+							{/* <div className="grid grid-cols-1 gap-4">
 								{dates?.map((date: any, index: string) => (
 									<AttendanceList
 										key={index}
@@ -172,8 +172,8 @@ const page = async ({ params: { id } }: { params: { id: string } }) => {
 								<p className="text-sm italic text-center mb-4">
 									There are no classes yet.
 								</p>
-							)}
-							{dates?.length >= 5 && (
+							)} */}
+							{/* {dates?.length >= 5 && (
 								<div className="text-center mt-4">
 									<Button
 										size={"sm"}
@@ -185,7 +185,7 @@ const page = async ({ params: { id } }: { params: { id: string } }) => {
 										</Link>
 									</Button>
 								</div>
-							)}
+							)} */}
 						</div>
 					</div>
 				</div>
