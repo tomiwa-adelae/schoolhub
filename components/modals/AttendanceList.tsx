@@ -82,9 +82,9 @@ export function AttendanceList({
 				{!loading && (
 					<ScrollArea className="max-h-[300px]">
 						<div className="grid gap-2">
-							{attendees.map((attendee, index) => (
+							{/* {attendees.map((attendee, index) => (
 								<Attendee key={index} />
-							))}
+							))} */}
 						</div>
 						{attendees?.length === 0 && (
 							<p className="text-sm italic text-center my-4">
