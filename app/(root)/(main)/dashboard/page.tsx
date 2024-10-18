@@ -269,7 +269,7 @@ const page = async ({ searchParams }: SearchParamProps) => {
 											? "My colleagues"
 											: "My students"}
 									</h3>
-									<div className="grid grid-cols-1 gap-4">
+									{/* <div className="grid grid-cols-1 gap-4">
 										{user?.identity === "student" ? (
 											<>
 												{colleagues?.map(
@@ -331,7 +331,7 @@ const page = async ({ searchParams }: SearchParamProps) => {
 												)
 											)
 										)}
-									</div>
+									</div> */}
 									{user?.identity === "student" &&
 									colleagues.length === 0 ? (
 										<p className="text-sm italic text-center mb-4">

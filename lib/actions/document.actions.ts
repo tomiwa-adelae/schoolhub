@@ -321,8 +321,8 @@ export const getStudentDocuments = async ({
 
 		if (!documents || documents.length === 0)
 			return {
-				status: 400,
-				message: "Oops! You have no documents.",
+				data: [],
+				message: "Oops! You have no documents",
 			};
 
 		const filteredDocuments = documents.filter((document) => {
@@ -393,8 +393,6 @@ export const editDocumentTitle = async ({
 
 		document.title = title || document.title;
 
-		console.log(title);
-
 		await document.save();
 
 		revalidatePath(`/documents/${documentId}`);
@@ -403,6 +401,7 @@ export const editDocumentTitle = async ({
 
 		return { message: `You have successfully edited the document title.` };
 	} catch (error: any) {
+		handleError(error);
 		return {
 			status: error?.status || 400,
 			message:

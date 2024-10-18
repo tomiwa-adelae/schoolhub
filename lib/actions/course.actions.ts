@@ -7,6 +7,7 @@ import User from "../database/models/user.model";
 import { handleError } from "../utils";
 import StudentCourse from "../database/models/student.course.model";
 import { revalidatePath } from "next/cache";
+// import Attendance from "../database/models/attendance.model";
 
 // Get all the courses the lecturer is taking
 export const getLecturerCourses = async ({
@@ -229,6 +230,11 @@ export const createNewCourse = async ({
 				status: 400,
 				message: `An error occurred! ${code} not created. Try again later.`,
 			};
+
+		// await Attendance.create({
+		// 	user: userId,
+		// 	course: course._id,
+		// });
 
 		revalidatePath("/courses/new");
 

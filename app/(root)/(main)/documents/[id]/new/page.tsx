@@ -1,4 +1,4 @@
-import Attendance from "@/components/Attendance";
+import Attendance from "@/components/Attendee";
 import { AttendanceChart } from "@/components/AttendanceChart";
 import CourseHeader from "@/components/CourseHeader";
 import Document from "@/components/Document";

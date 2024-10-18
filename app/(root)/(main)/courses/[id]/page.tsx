@@ -1,12 +1,15 @@
-import Attendance from "@/components/Attendance";
 import { AttendanceChart } from "@/components/AttendanceChart";
 import CourseHeader from "@/components/CourseHeader";
 import Document from "@/components/Document";
+import GenerateQRCodeButton from "@/components/GenerateQRCodeButton";
+import { AttendanceList } from "@/components/modals/AttendanceList";
 import NotFound from "@/components/shared/NotFound";
 import TopNavbar from "@/components/shared/TopNavbar";
 import { Button } from "@/components/ui/button";
+// import { getClassDates } from "@/lib/actions/attendance.actions";
 import { getCourseById, getStudents } from "@/lib/actions/course.actions";
 import { getDocuments } from "@/lib/actions/document.actions";
+// import { getQRCode } from "@/lib/actions/qrcode.actions";
 import { getUserById } from "@/lib/actions/user.actions";
 import { IUser } from "@/lib/database/models/user.model";
 import { auth } from "@clerk/nextjs";
@@ -23,9 +26,13 @@ const page = async ({ params: { id } }: { params: { id: string } }) => {
 	const documents = await getDocuments(id);
 
 	let students;
+	let dates;
+	let qrcode;
 
 	if (user?.identity === "lecturer") {
 		students = await getStudents({ courseId: id, userId: user?._id });
+		// dates = await getClassDates({ userId: user?._id, courseId: id });
+		// qrcode = await getQRCode({ userId: user?._id, courseId: id });
 	}
 
 	if (course.status === 400) return <NotFound message={course.message} />;
@@ -97,18 +104,13 @@ const page = async ({ params: { id } }: { params: { id: string } }) => {
 							className="object-cover w-full h-full overflow-hidden rounded-md border-2 border-dashed border-gray-400 text-center col-span-1"
 						/>
 					) : (
-						<div className="flex flex-col items-center justify-center gap-4 border-2 border-dashed border-gray-400 rounded-md">
-							<Image
-								src={"/assets/icons/qrcode.svg"}
-								alt={"QRCode"}
-								width={1000}
-								height={1000}
-								className="w-auto h-auto object-cover dark:invert"
-							/>
-							<h3 className="font-bold text-base">
-								Generate QR Code
-							</h3>
-						</div>
+						<GenerateQRCodeButton
+							courseId={course?._id}
+							userId={user?._id}
+							qrcode={qrcode?.qrcode}
+							title={course?.title}
+							date={qrcode?.date}
+						/>
 					)}
 				</div>
 				<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -155,22 +157,33 @@ const page = async ({ params: { id } }: { params: { id: string } }) => {
 								Attendances
 							</h3>
 							<div className="grid grid-cols-1 gap-4">
-								<Attendance />
-								<Attendance />
-								<Attendance />
-								<Attendance />
-								<Attendance />
+								{dates?.map((date: any, index: string) => (
+									<AttendanceList
+										key={index}
+										date={date}
+										userId={user?._id}
+										courseId={course?._id}
+									/>
+								))}
 							</div>
-							{/* <p className="text-sm italic text-center mb-4">
-									You have no attendance in this course yet.
-                                    </p> */}
-							<div className="text-center mt-4">
-								<Button size={"sm"} asChild variant={"ghost"}>
-									<Link href="/courses">
-										Show all attendance
-									</Link>
-								</Button>
-							</div>
+							{dates?.length === 0 && (
+								<p className="text-sm italic text-center mb-4">
+									There are no classes yet.
+								</p>
+							)}
+							{dates?.length >= 5 && (
+								<div className="text-center mt-4">
+									<Button
+										size={"sm"}
+										asChild
+										variant={"ghost"}
+									>
+										<Link href="/courses">
+											Show all dates
+										</Link>
+									</Button>
+								</div>
+							)}
 						</div>
 					</div>
 				</div>
