@@ -107,9 +107,11 @@ const page = async ({ params: { id } }: { params: { id: string } }) => {
 						<GenerateQRCodeButton
 							courseId={course?._id}
 							userId={user?._id}
-							qrcode={qrcode?.qrcode}
+							// qrcode={qrcode?.qrcode}
+							qrcode={""}
 							title={course?.title}
-							date={qrcode?.date}
+							// date={qrcode?.date}
+							date={""}
 						/>
 					)}
 				</div>
